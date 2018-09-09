@@ -1,0 +1,15 @@
+{
+  "name": "bjstock-rest-service",
+  "scripts": {
+  },
+  "env": {
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+
+  ]
+}
