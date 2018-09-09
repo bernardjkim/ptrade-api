@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bkim0128/stock/server/src/system/app"
+	"github.com/bkim0128/bjstock-rest-service/src/system/app"
 	"github.com/joho/godotenv"
 
-	DB "github.com/bkim0128/stock/server/src/system/db"
+	DB "github.com/bkim0128/bjstock-rest-service/src/system/db"
 
 	_ "github.com/mattn/go-sqlite3"
 )

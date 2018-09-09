@@ -3,7 +3,6 @@ package router
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,14 +10,14 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
-	"github.com/bkim0128/stock/server/pkg/types/routes"
-	"github.com/bkim0128/stock/server/src/system/jwt"
+	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
+	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
 
-	Users "github.com/bkim0128/stock/server/pkg/types/users"
-	AuthHandler "github.com/bkim0128/stock/server/src/controllers/v1/auth"
-	StockHandler "github.com/bkim0128/stock/server/src/controllers/v1/stocks"
-	TransactionHandler "github.com/bkim0128/stock/server/src/controllers/v1/transactions"
-	UserHandler "github.com/bkim0128/stock/server/src/controllers/v1/users"
+	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
+	AuthHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/auth"
+	StockHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/stocks"
+	TransactionHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/transactions"
+	UserHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/users"
 )
 
 var db *xorm.Engine
@@ -49,9 +48,6 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 // AuthMiddleware handles authentication of requests received by router
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		fmt.Println("Auth Middleware")
-		fmt.Println(r.URL)
 
 		// check if token is present
 		tokenVal := r.Header.Get("X-App-Token")

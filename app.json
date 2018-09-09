@@ -1,13 +1,17 @@
 {
   "name": "bjstock-rest-service",
   "scripts": {
+      "postdeploy": "make create_keys"
   },
   "env": {
   },
   "formation": {
   },
   "addons": [
-
+      "jawsdb",
+      {
+          "plan": "kitefin"
+      }
   ],
   "buildpacks": [
 

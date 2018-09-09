@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/bkim0128/stock/server/src/system/router"
+	"github.com/bkim0128/bjstock-rest-service/src/system/router"
 
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/handlers"

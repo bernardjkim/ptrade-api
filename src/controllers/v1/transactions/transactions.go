@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"time"
 
-	Stocks "github.com/bkim0128/stock/server/pkg/types/stocks"
-	Transactions "github.com/bkim0128/stock/server/pkg/types/transactions"
-	Users "github.com/bkim0128/stock/server/pkg/types/users"
-	ORM "github.com/bkim0128/stock/server/src/system/db"
+	Stocks "github.com/bkim0128/bjstock-rest-service/pkg/types/stocks"
+	Transactions "github.com/bkim0128/bjstock-rest-service/pkg/types/transactions"
+	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
+	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
 
 	"github.com/go-xorm/xorm"
 	mux "github.com/gorilla/mux"

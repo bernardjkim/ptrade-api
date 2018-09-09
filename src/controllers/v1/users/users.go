@@ -9,8 +9,8 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
-	Users "github.com/bkim0128/stock/server/pkg/types/users"
-	ORM "github.com/bkim0128/stock/server/src/system/db"
+	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
+	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
 )
 
 var db *xorm.Engine

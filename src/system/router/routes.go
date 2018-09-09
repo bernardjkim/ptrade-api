@@ -3,11 +3,11 @@ package router
 import (
 	"net/http"
 
-	"github.com/bkim0128/stock/server/pkg/types/routes"
+	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
 
-	// AuthHandler "github.com/bkim0128/stock/server/src/controllers/auth"
-	// PortfolioHandler "github.com/bkim0128/stock/server/src/controllers/portfolio"
-	// StockHandler "github.com/bkim0128/stock/server/src/controllers/stock"
+	// AuthHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/auth"
+	// PortfolioHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/portfolio"
+	// StockHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/stock"
 
 	"github.com/go-xorm/xorm"
 )

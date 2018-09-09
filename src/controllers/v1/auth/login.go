@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	Users "github.com/bkim0128/stock/server/pkg/types/users"
-	ORM "github.com/bkim0128/stock/server/src/system/db"
-	"github.com/bkim0128/stock/server/src/system/jwt"
-	Passwords "github.com/bkim0128/stock/server/src/system/passwords"
+	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
+	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
+	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
+	Passwords "github.com/bkim0128/bjstock-rest-service/src/system/passwords"
 )
 
 //TODO: status codes
