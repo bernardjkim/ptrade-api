@@ -4,7 +4,6 @@ import (
 	"crypto/rsa"
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -40,18 +39,18 @@ func init() {
 	// Load env variables from .env
 	_ = godotenv.Load()
 
-	signBytes = []byte(os.Getenv("PRIVATE_KEY"))
+	// signBytes = []byte(os.Getenv("PRIVATE_KEY"))
 	signKey, err = jwt.ParseRSAPrivateKeyFromPEM(signBytes)
 	if err != nil {
 		fmt.Println("SignKey not found")
-		panic(err)
+		// panic(err)
 	}
 
-	verifyBytes = []byte(os.Getenv("PUBLIC_KEY"))
+	// verifyBytes = []byte(os.Getenv("PUBLIC_KEY"))
 	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
 	if err != nil {
 		fmt.Println("VerifyKey not found")
-		panic(err)
+		// panic(err)
 	}
 }
 
