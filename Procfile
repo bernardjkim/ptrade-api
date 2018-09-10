@@ -1,2 +1,2 @@
-web: server
+web: bjstock-rest-service
 

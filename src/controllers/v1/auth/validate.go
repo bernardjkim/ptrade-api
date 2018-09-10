@@ -3,7 +3,7 @@ package session
 // import (
 // 	"fmt"
 
-// 	"github.com/bkim0128/stock/server/src/system/jwt"
+// 	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
 
 // 	"encoding/json"
 // 	"log"

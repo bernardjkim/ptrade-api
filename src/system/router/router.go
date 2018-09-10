@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/bkim0128/stock/server/pkg/types/routes"
-	V1SubRoutes "github.com/bkim0128/stock/server/src/controllers/v1/router"
+	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
+	V1SubRoutes "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/router"
 
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"

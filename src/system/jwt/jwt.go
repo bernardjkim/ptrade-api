@@ -37,21 +37,21 @@ func init() {
 		err         error
 	)
 
-	// Load env variables
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("unable to load .env file")
-	}
+	// Load env variables from .env
+	_ = godotenv.Load()
 
 	signBytes = []byte(os.Getenv("PRIVATE_KEY"))
 	signKey, err = jwt.ParseRSAPrivateKeyFromPEM(signBytes)
 	if err != nil {
-		panic(err)
+		fmt.Println("SignKey not found")
+		// panic(err)
 	}
 
 	verifyBytes = []byte(os.Getenv("PUBLIC_KEY"))
 	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
 	if err != nil {
-		panic(err)
+		fmt.Println("VerifyKey not found")
+		// panic(err)
 	}
 }
 

@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"github.com/bkim0128/stock/server/pkg/db"
+	"github.com/bkim0128/bjstock-rest-service/pkg/db"
 )
 
 // type Portfolio []Transaction
