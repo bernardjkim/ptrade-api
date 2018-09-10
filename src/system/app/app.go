@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -31,10 +30,7 @@ func (s *Server) Init(port string, db *xorm.Engine) {
 	s.port = ":" + port
 	s.Db = db
 
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("unable to load .env file")
-		// panic(err)
-	}
+	_ = godotenv.Load()
 
 	envPort := os.Getenv("PORT")
 	if len(envPort) > 0 {

@@ -2,15 +2,13 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/bkim0128/bjstock-rest-service/src/system/app"
 	"github.com/joho/godotenv"
 
 	DB "github.com/bkim0128/bjstock-rest-service/src/system/db"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
@@ -34,9 +32,8 @@ func init() {
 
 	flag.Parse()
 
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("unable to load .env file")
-	}
+	_ = godotenv.Load()
+
 	if host := os.Getenv("DB_HOST"); len(host) > 0 {
 		dbhost = host
 	}
@@ -63,6 +60,7 @@ func main() {
 
 	db, err := DB.Connect(dbhost, dbport, dbuser, dbpass, dbdatabase, dboptions)
 	if err != nil {
+		log.Println("Unable to connect to db")
 		panic(err)
 	}
 

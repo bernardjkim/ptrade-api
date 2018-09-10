@@ -56,12 +56,6 @@
   version = "v1.2.0"
 
 [[projects]]
-  name = "github.com/mattn/go-sqlite3"
-  packages = ["."]
-  revision = "25ecb14adfc7543176f7d85291ec7dba82c6f7e4"
-  version = "v1.9.0"
-
-[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
@@ -79,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "df6d9d85456bba7dff2958f0b4817b5b294daa971a6387da088b424ed7624d2e"
+  inputs-digest = "845a41ac5f9145865e28e4ad28a0cc0a1d4b139d92409a5a718c0a244dba994e"
   solver-name = "gps-cdcl"
   solver-version = 1
