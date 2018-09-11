@@ -62,6 +62,13 @@ func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	// Warning: Composite literal uses unkeyed fields.
 	// Can remove warnings by including field names (field: value).
 	SubRoute = map[string]routes.SubRoutePackage{
+		"/v1": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				routes.Route{"GetIndex", "GET", "", GetIndex},
+			},
+			Middleware: []mux.MiddlewareFunc{},
+		},
+
 		"/v1/sessions": routes.SubRoutePackage{
 			Routes: routes.Routes{
 				routes.Route{"CreateSession", "POST", "", SessionHandler.CreateSession},
@@ -104,6 +111,12 @@ func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	}
 	return
 }
+
+// NotImplemented handler is used for API endpoints not yet implemented and will
+// return the message "Not Implemented".
+var GetIndex = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
+})
 
 // NotImplemented handler is used for API endpoints not yet implemented and will
 // return the message "Not Implemented".
