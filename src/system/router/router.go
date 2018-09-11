@@ -19,14 +19,14 @@ func (r *Router) Init(db *xorm.Engine) {
 
 	// TODO: do some routes need to be part of the base routes?
 
-	// baseRoutes := GetRoutes(db)
-	// for _, route := range baseRoutes {
-	// 	r.Router.
-	// 		Methods(route.Method).
-	// 		Path(route.Pattern).
-	// 		Name(route.Name).
-	// 		Handler(route.HandlerFunc)
-	// }
+	baseRoutes := GetRoutes(db)
+	for _, route := range baseRoutes {
+		r.Router.
+			Methods(route.Method).
+			Path(route.Pattern).
+			Name(route.Name).
+			Handler(route.HandlerFunc)
+	}
 
 	v1SubRoutes := V1SubRoutes.GetRoutes(db)
 	for name, pack := range v1SubRoutes {

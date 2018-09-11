@@ -20,8 +20,15 @@ func GetRoutes(db *xorm.Engine) routes.Routes {
 
 	// Warning: Composite literal uses unkeyed fields.
 	// Can remove warnings by including field names (field: value).
-	return routes.Routes{}
+	return routes.Routes{
+		routes.Route{"GetIndex", "GET", "/", GetIndex},
+	}
 }
+
+// GetIndex handler will serve the index for the api
+var GetIndex = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
+})
 
 // NotImplemented handler is used for API endpoints not yet implemented and will
 // return the message "Not Implemented".

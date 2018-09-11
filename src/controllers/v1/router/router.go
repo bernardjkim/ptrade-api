@@ -112,8 +112,7 @@ func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	return
 }
 
-// NotImplemented handler is used for API endpoints not yet implemented and will
-// return the message "Not Implemented".
+// GetIndex will return the index for the api
 var GetIndex = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "index.html")
 })
