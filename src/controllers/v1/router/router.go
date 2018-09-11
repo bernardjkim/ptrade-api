@@ -12,7 +12,7 @@ import (
 	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
 
 	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
-	AuthHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/auth"
+	SessionHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/sessions"
 	StockHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/stocks"
 	TransactionHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/transactions"
 	UserHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/users"
@@ -28,16 +28,15 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		tokenVal := r.Header.Get("X-App-Token")
 		if len(tokenVal) < 1 {
 			log.Println("Ignoring request. No token present.")
-			http.Error(w, "No token provided for validation.", http.StatusUnauthorized) //TODO: status code
+			http.Error(w, "No token provided for validation.", http.StatusUnauthorized)
 			return
 		}
 
 		// get owner of token
 		user, err := jwt.GetUserFromToken(db, tokenVal)
-
 		if err != nil {
 			log.Println(err)
-			http.Error(w, err.Error(), http.StatusUnauthorized) //TODO: status code
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
@@ -53,37 +52,35 @@ func AuthMiddleware(next http.Handler) http.Handler {
 func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	db = DB
 
-	AuthHandler.Init(db)
+	SessionHandler.Init(db)
 	TransactionHandler.Init(db)
 	StockHandler.Init(db)
 	UserHandler.Init(db)
 
 	/* ROUTES */
 
-	// TODO: nested subrouters
-	// how to add a subroute to the subroute?
-
 	// Warning: Composite literal uses unkeyed fields.
 	// Can remove warnings by including field names (field: value).
 	SubRoute = map[string]routes.SubRoutePackage{
-		"/v1/auth": routes.SubRoutePackage{
+		"/v1/sessions": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"AuthLogin", "POST", "/login", AuthHandler.Login},
-				routes.Route{"AuthLogout", "POST", "/logout", NotImplemented}, // TODO: implement logout function
-
+				routes.Route{"CreateSession", "POST", "", SessionHandler.CreateSession},
+				routes.Route{"DeleteSession", "DELETE", "", NotImplemented},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
 		"/v1/stocks": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"StockData", "GET", "", StockHandler.GetStocks},
+				routes.Route{"GetStocks", "GET", "", StockHandler.GetStocks},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
 
 		// NOTE: order matters, match /user/.../transactions subroute before /users
+		// was not using the assigned middleware
 		"/v1/users/{ID:[0-9]+}/transactions": routes.SubRoutePackage{
 			Routes: routes.Routes{
+
 				// TODO: currently have users GET/POST transactions directly.
 				// maybe want to have user create orders first and later
 				// execute transaction
