@@ -1,10 +1,10 @@
-package session
+package sessions
 
 import "net/http"
 
 // TODO: blacklist user token
 
 // Logout will delete the user session...
-func Logout(w http.ResponseWriter, r *http.Request) {
+func DeleteSession(w http.ResponseWriter, r *http.Request) {
 
 }

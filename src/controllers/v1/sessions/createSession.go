@@ -1,21 +1,22 @@
-package session
+package sessions
 
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
+
 	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
 	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
-	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
 	Passwords "github.com/bkim0128/bjstock-rest-service/src/system/passwords"
 )
 
 //TODO: status codes
 
-// Login function attempts to authenticate user with given credentials. Responds
-// with user an authentication token if successful.
-func Login(w http.ResponseWriter, r *http.Request) {
+// CreateSession function attempts to authenticate user with given credentials.
+// Responds with jwt token if successful.
+func CreateSession(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	email := r.FormValue("email")
@@ -23,7 +24,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// check if both email and password arguments have been provided
 	if len(email) < 1 || len(password) < 1 {
-		http.Error(w, "Email and password are required.", http.StatusUnauthorized)
+		http.Error(w, "Email and password are required.", http.StatusBadRequest)
 		return
 	}
 
@@ -37,6 +38,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// check for valid password
 	if !Passwords.IsValid(user.Password, password) {
+		log.Println(w, "Invalid password")
 		http.Error(w, "Credentials do not match.", http.StatusUnauthorized)
 		return
 	}
@@ -56,10 +58,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	packet, err := json.Marshal(token)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to marshal json.", http.StatusUnauthorized)
+		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
 		return
 	}
 
+	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(packet)
 }

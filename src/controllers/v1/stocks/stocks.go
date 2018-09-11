@@ -27,7 +27,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	// get list of available stocks from database
 	if err := ORM.Find(db, &Stocks.Stock{}, &stockList); err != nil {
 		log.Println(err)
-		http.Error(w, "unable to get stock list", http.StatusNotFound) //TODO: status code
+		http.Error(w, "Unable to get stock list", http.StatusInternalServerError)
 		return
 	}
 
@@ -35,7 +35,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	packet, err := json.Marshal(stockList)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to marshal json.", http.StatusNotFound) // TODO: status code
+		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
 		return
 	}
 

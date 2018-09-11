@@ -6,7 +6,7 @@ import (
 
 // UserTable represents a user stored in the database
 type UserTable struct {
-	ID       int64  `xorm:"ID" json:"ID" schema:"ID"`
+	ID       int64  `xorm:"id" json:"id" schema:"id"`
 	First    string `xorm:"first" json:"first" schema:"first"`
 	Last     string `xorm:"last" json:"last" schema:"last"`
 	Email    string `xorm:"email" json:"email" schema:"email"`
