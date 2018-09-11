@@ -1,9 +1,7 @@
 package router
 
 import (
-	"bytes"
 	"context"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -22,29 +20,6 @@ import (
 
 var db *xorm.Engine
 
-// Middleware for subrouter. Currently just calls the next handler.
-func Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		next.ServeHTTP(w, r)
-	})
-}
-
-// LoggingMiddleware logs all requests received by router
-func LoggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// TODO: what to log?
-		// Dont want to log certain requests that may hold sesitive information
-		bodyBytes, _ := ioutil.ReadAll(r.Body)
-		r.Body.Close() //  must close
-		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
-		bodyString := string(bodyBytes)
-		log.Println(bodyString)
-
-		next.ServeHTTP(w, r)
-	})
-}
-
 // AuthMiddleware handles authentication of requests received by router
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -59,6 +34,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		// get owner of token
 		user, err := jwt.GetUserFromToken(db, tokenVal)
+
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusUnauthorized) //TODO: status code
@@ -77,10 +53,10 @@ func AuthMiddleware(next http.Handler) http.Handler {
 func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	db = DB
 
-	AuthHandler.Init(DB)
-	TransactionHandler.Init(DB)
-	StockHandler.Init(DB)
-	UserHandler.Init(DB)
+	AuthHandler.Init(db)
+	TransactionHandler.Init(db)
+	StockHandler.Init(db)
+	UserHandler.Init(db)
 
 	/* ROUTES */
 
@@ -95,33 +71,38 @@ func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 				routes.Route{"AuthLogin", "POST", "/login", AuthHandler.Login},
 				routes.Route{"AuthLogout", "POST", "/logout", NotImplemented}, // TODO: implement logout function
 
-				// TODO: move to POST /users ?
-				routes.Route{"AuthSignup", "POST", "/signup", AuthHandler.SignUp},
 			},
-			Middleware: []mux.MiddlewareFunc{LoggingMiddleware},
+			Middleware: []mux.MiddlewareFunc{},
 		},
 		"/v1/stocks": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"StockData", "GET", "/", StockHandler.GetStocks},
+				routes.Route{"StockData", "GET", "", StockHandler.GetStocks},
 			},
-			Middleware: []mux.MiddlewareFunc{LoggingMiddleware},
+			Middleware: []mux.MiddlewareFunc{},
+		},
+
+		// NOTE: order matters, match /user/.../transactions subroute before /users
+		"/v1/users/{ID:[0-9]+}/transactions": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				// TODO: currently have users GET/POST transactions directly.
+				// maybe want to have user create orders first and later
+				// execute transaction
+				routes.Route{"GetUserTxns", "GET", "", TransactionHandler.GetTransactions},
+				routes.Route{"CreateUserTxn", "POST", "", TransactionHandler.CreateTransaction},
+
+				routes.Route{"GetUserTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
+			},
+			Middleware: []mux.MiddlewareFunc{AuthMiddleware},
 		},
 		"/v1/users": routes.SubRoutePackage{
 			Routes: routes.Routes{
 
-				routes.Route{"GetUsers", "GET", "/", NotImplemented},
+				routes.Route{"GetUsers", "GET", "", NotImplemented},
+				routes.Route{"CreateUser", "POST", "", UserHandler.CreateUser},
+
 				routes.Route{"GetUser", "GET", "/{ID:[0-9]+}", UserHandler.GetUser},
-
-				// TODO: currently have users GET/POST transactions directly.
-				// maybe want to have user create orders first and later
-				// execute transaction
-
-				routes.Route{"GetUserTxns", "GET", "/{ID:[0-9]+}/transactions", TransactionHandler.GetTransactions},
-				routes.Route{"CreateUserTxn", "POST", "/self/transactions", TransactionHandler.BuyShares},
-
-				routes.Route{"GetUserTxn", "GET", "/{ID:[0-9]+}/transaction/{txnID:[0-9]+}", NotImplemented},
 			},
-			Middleware: []mux.MiddlewareFunc{LoggingMiddleware, AuthMiddleware},
+			Middleware: []mux.MiddlewareFunc{},
 		},
 	}
 	return

@@ -1,11 +1,11 @@
 package router
 
 import (
-	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
-	V1SubRoutes "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/router"
-
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
+
+	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
+	V1SubRoutes "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/router"
 )
 
 // Router is a wrapper for a mux router.
@@ -32,6 +32,7 @@ func (r *Router) Init(db *xorm.Engine) {
 	for name, pack := range v1SubRoutes {
 		r.AttachSubRouterWithMiddleware(name, pack.Routes, pack.Middleware)
 	}
+
 }
 
 // AttachSubRouterWithMiddleware will attach the subrouter to the given path

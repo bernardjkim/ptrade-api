@@ -36,6 +36,12 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// if curUserID := r.Context().Value(Users.UserIDKey); curUserID != userID {
+	// 	log.Println("Attepted to get another user's transactions")
+	// 	http.Error(w, "Unauthorized to make this request", http.StatusBadRequest)
+	// 	return
+	// }
+
 	// get all transactions made by user
 	transactionList := []Transactions.Transaction{}
 
@@ -58,12 +64,25 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	w.Write(packet)
 }
 
-// BuyShares will execute user transactions and update the database with the
+// CreateTransaction will execute user transactions and update the database with the
 // desired transaction.
-func BuyShares(w http.ResponseWriter, r *http.Request) {
+func CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	userID := r.Context().Value(Users.UserIDKey).(int64)
+	// get user id from url
+	userID, err := strconv.ParseInt(mux.Vars(r)["ID"], 10, 64)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Provided invalid id", http.StatusBadRequest)
+		return
+	}
+
+	// get id of authenticated user
+	if curUserID := r.Context().Value(Users.UserIDKey); curUserID != userID {
+		log.Println("Attepted to create a transaction for another user")
+		http.Error(w, "Unauthorized to make this request", http.StatusBadRequest)
+		return
+	}
 
 	// TODO: buy/sell depending on sign of quantity
 	quantity, err := strconv.ParseInt(r.FormValue("quantity"), 10, 64)
@@ -110,6 +129,7 @@ func BuyShares(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: format price to two dicimal places?
 	price, err := strconv.ParseFloat(string(body), 64)
 	if err != nil {
 		log.Println(err)
@@ -132,5 +152,15 @@ func BuyShares(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// convert packet to JSON
+	packet, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(packet)
 }
