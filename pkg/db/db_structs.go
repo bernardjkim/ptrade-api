@@ -10,9 +10,7 @@ type UserTable struct {
 	First    string `xorm:"VARCHAR(50) NOT NULL 'first'" json:"first" schema:"first"`
 	Last     string `xorm:"VARCHAR(50) NOT NULL 'last'" json:"last" schema:"last"`
 	Email    string `xorm:"VARCHAR(50) NOT NULL 'email'" json:"email" schema:"email"`
-	Password string `xorm:"TEXT NOT NULL 'password'" json:"password" schema:"password"`
-	// TODO: varchar vs text.
-	// what is max password hash size?
+	Password string `xorm:"VARCHAR(255) NOT NULL 'password'" json:"password" schema:"password"`
 }
 
 // StockTable represents a stock that is available in the database

@@ -43,7 +43,7 @@ func main() {
 		panic(err)
 	}
 
-	// DB.Init(db)
+	DB.Init(db)
 
 	s := app.NewServer()
 	s.Init(port, db)
