@@ -12,42 +12,21 @@ import (
 )
 
 var (
-	port       string
-	dbhost     string
-	dbport     string
-	dbuser     string
-	dbpass     string
-	dboptions  string
-	dbdatabase string
+	port      string
+	dbURL     string
+	dboptions string
 )
 
 func init() {
 	flag.StringVar(&port, "port", "8080", "Accepting the port that the server should listen on")
-	flag.StringVar(&dbhost, "dbhost", "127.0.0.1", "Set the port for the application")
-	flag.StringVar(&dbport, "dbport", "3306", "Set the port for the application")
-	flag.StringVar(&dbuser, "dbuser", "root", "Set the port for the application")
-	flag.StringVar(&dbpass, "dbpass", "pass", "Set the port for the application")
 	flag.StringVar(&dboptions, "dboptions", "parseTime=true", "Set the port for the application")
-	flag.StringVar(&dbdatabase, "dbdatabase", "fusion", "Set the port for the application")
 
 	flag.Parse()
 
 	_ = godotenv.Load()
 
-	if host := os.Getenv("DB_HOST"); len(host) > 0 {
-		dbhost = host
-	}
-	if database := os.Getenv("DB_DATABASE"); len(database) > 0 {
-		dbdatabase = database
-	}
-	if user := os.Getenv("DB_USER"); len(user) > 0 {
-		dbuser = user
-	}
-	if password := os.Getenv("DB_PASSWORD"); len(password) > 0 {
-		dbpass = password
-	}
-	if port := os.Getenv("DB_PORT"); len(port) > 0 {
-		dbport = port
+	if url := os.Getenv("JAWSDB_URL"); len(url) > 0 {
+		dbURL = url
 	}
 
 	envPort := os.Getenv("PORT")
@@ -58,11 +37,13 @@ func init() {
 
 func main() {
 
-	db, err := DB.Connect(dbhost, dbport, dbuser, dbpass, dbdatabase, dboptions)
+	db, err := DB.ConnectURL(dbURL, dboptions)
 	if err != nil {
 		log.Println("Unable to connect to db")
 		panic(err)
 	}
+
+	// DB.Init(db)
 
 	s := app.NewServer()
 	s.Init(port, db)

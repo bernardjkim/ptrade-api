@@ -1,15 +1,29 @@
 package db
 
 import (
+	"fmt"
+	"net/url"
+
 	// import necessary to register mysql driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 )
 
 // Connect will attempt to connect to the specified database.
-// Will return an xorm Engine and possible error.
+// Will return an xorm Engine and any errors.
 func Connect(host string, port string, user string, pass string, database string, options string) (db *xorm.Engine, err error) {
 	return xorm.NewEngine("mysql", user+":"+pass+"@tcp("+host+":"+port+")/"+database+"?charset=utf8&"+options)
+}
+
+// ConnectURL will attempt to connect to the specified database.
+// Will return an xorm Engine and any errors.
+func ConnectURL(URL, options string) (db *xorm.Engine, err error) {
+	fmt.Println(URL)
+	u, err := url.Parse(URL)
+	if err != nil {
+		return
+	}
+	return xorm.NewEngine(u.Scheme, u.User.String()+"@tcp("+u.Host+")/"+u.Path+"?charset=utf8&"+options)
 }
 
 // Find will fetch mutliple rows matching findBy query and populate objects
