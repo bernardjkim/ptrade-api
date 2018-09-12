@@ -23,11 +23,11 @@ type StockTable struct {
 // TransactionTable represents a transaction made by a user
 type TransactionTable struct {
 	ID       int64     `xorm:"SERIAL PRIMARY KEY 'id'" json:"id" schema:"id"`
-	UserID   int64     `xorm:"NOT NULL 'user_id'" json:"user_id" schema:"user_id"`
-	StockID  int64     `xorm:"NOT NULL 'stock_id'" json:"stock_id" schema:"stock_id"`
-	Date     time.Time `xorm:"NOT NULL 'date'" json:"date" schema:"date"`
-	Price    float64   `xorm:"NOT NULL 'price'" json:"price" schema:"price"`
-	Quantity int64     `xorm:"NOT NULL 'quantity'" json:"quantity" schema:"quantity"`
+	UserID   int64     `xorm:"INTEGER NOT NULL 'user_id'" json:"user_id" schema:"user_id"`
+	StockID  int64     `xorm:"INTEGER NOT NULL 'stock_id'" json:"stock_id" schema:"stock_id"`
+	Date     time.Time `xorm:"DATETIME NOT NULL 'date'" json:"date" schema:"date"`
+	Price    float64   `xorm:"FLOAT NOT NULL 'price'" json:"price" schema:"price"`
+	Quantity int64     `xorm:"INTEGER NOT NULL 'quantity'" json:"quantity" schema:"quantity"`
 }
 
 // TODO: xorm doesn't seem to support for foriegn keys.
