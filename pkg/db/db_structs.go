@@ -6,7 +6,6 @@ import (
 
 // UserTable represents a user stored in the database
 type UserTable struct {
-<<<<<<< HEAD
 	ID       int64  `xorm:"SERIAL PRIMARY KEY 'id'" json:"id" schema:"id"`
 	First    string `xorm:"VARCHAR(50) NOT NULL 'first'" json:"first" schema:"first"`
 	Last     string `xorm:"VARCHAR(50) NOT NULL 'last'" json:"last" schema:"last"`
@@ -14,13 +13,6 @@ type UserTable struct {
 	Password string `xorm:"TEXT NOT NULL 'password'" json:"password" schema:"password"`
 	// TODO: varchar vs text.
 	// what is max password hash size?
-=======
-	ID       int64  `xorm:"id" json:"id" schema:"id"`
-	First    string `xorm:"first" json:"first" schema:"first"`
-	Last     string `xorm:"last" json:"last" schema:"last"`
-	Email    string `xorm:"email" json:"email" schema:"email"`
-	Password string `xorm:"password" json:"password" schema:"password"`
->>>>>>> v1
 }
 
 // StockTable represents a stock that is available in the database
