@@ -58,4 +58,4 @@
   unused-packages = true
 
 [metadata.heroku]
-  root-package = "github.com/bkim0128/bjstock-rest-service"
+  root-package = "github.com/bernardjkim/ptrade-api"

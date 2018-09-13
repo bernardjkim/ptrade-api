@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-xorm/xorm"
 
-	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
+	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
 )
 
 // Middleware function for Router

@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-xorm/xorm"
 
-	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
-	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
+	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
+	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
 // GetUserFromToken will get the user that owns the the given jwt token. Returns

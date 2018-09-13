@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	Stocks "github.com/bkim0128/bjstock-rest-service/pkg/types/stocks"
-	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
+	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
+	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
 
 	"github.com/go-xorm/xorm"
 )

@@ -1,2 +1,2 @@
-web: bjstock-rest-service
+web: ptrade-api
 

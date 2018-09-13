@@ -1,6 +1,6 @@
 package stocks
 
-import "github.com/bkim0128/bjstock-rest-service/pkg/db"
+import "github.com/bernardjkim/ptrade-api/pkg/db"
 
 type Stock db.StockTable
 

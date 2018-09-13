@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
+	"github.com/bernardjkim/ptrade-api/src/system/jwt"
 
-	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
-	ORM "github.com/bkim0128/bjstock-rest-service/src/system/db"
-	Passwords "github.com/bkim0128/bjstock-rest-service/src/system/passwords"
+	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
+	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
+	Passwords "github.com/bernardjkim/ptrade-api/src/system/passwords"
 )
 
 //TODO: status codes

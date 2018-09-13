@@ -8,14 +8,14 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
-	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
-	"github.com/bkim0128/bjstock-rest-service/src/system/jwt"
+	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
+	"github.com/bernardjkim/ptrade-api/src/system/jwt"
 
-	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
-	SessionHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/sessions"
-	StockHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/stocks"
-	TransactionHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/transactions"
-	UserHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/users"
+	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
+	SessionHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
+	StockHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
+	TransactionHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/transactions"
+	UserHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 )
 
 var db *xorm.Engine

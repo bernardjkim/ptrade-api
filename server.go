@@ -5,10 +5,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/bkim0128/bjstock-rest-service/src/system/app"
+	"github.com/bernardjkim/ptrade-api/src/system/app"
 	"github.com/joho/godotenv"
 
-	DB "github.com/bkim0128/bjstock-rest-service/src/system/db"
+	DB "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
 var (

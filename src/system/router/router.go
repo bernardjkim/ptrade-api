@@ -4,8 +4,8 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
-	"github.com/bkim0128/bjstock-rest-service/pkg/types/routes"
-	V1SubRoutes "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/router"
+	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
+	V1SubRoutes "github.com/bernardjkim/ptrade-api/src/controllers/v1/router"
 )
 
 // Router is a wrapper for a mux router.

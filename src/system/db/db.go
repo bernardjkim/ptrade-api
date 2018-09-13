@@ -7,9 +7,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 
-	Stocks "github.com/bkim0128/bjstock-rest-service/pkg/types/stocks"
-	Transactions "github.com/bkim0128/bjstock-rest-service/pkg/types/transactions"
-	Users "github.com/bkim0128/bjstock-rest-service/pkg/types/users"
+	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
+	Transactions "github.com/bernardjkim/ptrade-api/pkg/types/transactions"
+	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 )
 
 // Init db by creating the necessary tables
