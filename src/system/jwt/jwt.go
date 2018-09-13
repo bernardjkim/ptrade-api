@@ -38,20 +38,21 @@ func init() {
 	)
 
 	// Load env variables from .env
-	_ = godotenv.Load()
+	envPath := os.Getenv("GOPATH") + "/src/github.com/bkim0128/bjstock-rest-service/.env"
+	_ = godotenv.Load(envPath)
 
 	signBytes = []byte(os.Getenv("PRIVATE_KEY"))
 	signKey, err = jwt.ParseRSAPrivateKeyFromPEM(signBytes)
 	if err != nil {
 		fmt.Println("SignKey not found")
-		// panic(err)
+		panic(err)
 	}
 
 	verifyBytes = []byte(os.Getenv("PUBLIC_KEY"))
 	verifyKey, err = jwt.ParseRSAPublicKeyFromPEM(verifyBytes)
 	if err != nil {
 		fmt.Println("VerifyKey not found")
-		// panic(err)
+		panic(err)
 	}
 }
 

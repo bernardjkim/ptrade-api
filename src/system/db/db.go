@@ -13,9 +13,9 @@ import (
 )
 
 // Init db by creating the necessary tables
-func Init(db *xorm.Engine) {
+func Init(db *xorm.Engine) (err error) {
 	db.ShowSQL()
-	db.CreateTables(&Users.User{}, &Stocks.Stock{}, &Transactions.Transaction{})
+	return db.CreateTables(&Users.User{}, &Stocks.Stock{}, &Transactions.Transaction{})
 }
 
 // Connect will attempt to connect to the specified database.
