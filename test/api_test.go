@@ -11,14 +11,14 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
-	UserHandler "github.com/bkim0128/bjstock-rest-service/src/controllers/v1/users"
-	DB "github.com/bkim0128/bjstock-rest-service/src/system/db"
+	UserHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
+	DB "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
 // initDB will initialize connection to database, and return a pointer to
 // the xorm.Engine.
 func initDB() (db *xorm.Engine) {
-	_ = godotenv.Load(os.Getenv("GOPATH") + "/src/github.com/bkim0128/bjstock-rest-service/.env")
+	_ = godotenv.Load(os.Getenv("GOPATH") + "/src/github.com/bernardjkim/ptrade-api/.env")
 
 	url := os.Getenv("JAWSDB_ORANGE_URL")
 	if len(url) < 0 {
