@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 
-	"github.com/bkim0128/bjstock-rest-service/src/system/router"
+	"github.com/bernardjkim/ptrade-api/src/system/router"
 )
 
 // Server struct contains a port number and a reference to a connected database.

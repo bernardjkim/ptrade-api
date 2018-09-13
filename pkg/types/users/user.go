@@ -1,7 +1,7 @@
 package users
 
 import (
-	"github.com/bkim0128/bjstock-rest-service/pkg/db"
+	"github.com/bernardjkim/ptrade-api/pkg/db"
 )
 
 type Users []User
