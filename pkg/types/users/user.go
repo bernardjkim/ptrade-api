@@ -13,5 +13,5 @@ type key string
 const UserIDKey key = "userID"
 
 func (u *User) TableName() string {
-	return "user"
+	return "users"
 }

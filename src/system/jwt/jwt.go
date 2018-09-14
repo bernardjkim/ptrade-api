@@ -38,7 +38,7 @@ func init() {
 	)
 
 	// Load env variables from .env
-	envPath := os.Getenv("GOPATH") + "/src/github.com/bkim0128/bjstock-rest-service/.env"
+	envPath := os.Getenv("GOPATH") + "/src/github.com/bernardjkim/ptrade-api/.env"
 	_ = godotenv.Load(envPath)
 
 	signBytes = []byte(os.Getenv("PRIVATE_KEY"))

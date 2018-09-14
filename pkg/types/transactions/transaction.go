@@ -9,5 +9,5 @@ import (
 type Transaction db.TransactionTable
 
 func (t *Transaction) TableName() string {
-	return "transaction"
+	return "transactions"
 }
