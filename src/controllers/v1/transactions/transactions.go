@@ -9,24 +9,27 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-xorm/xorm"
+	"github.com/gorilla/mux"
+
 	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
 	Transactions "github.com/bernardjkim/ptrade-api/pkg/types/transactions"
 	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
-
-	"github.com/go-xorm/xorm"
-	mux "github.com/gorilla/mux"
 )
 
-var db *xorm.Engine
+// TransactionHandler struct needs to be initialized with a database connection.
+type TransactionHandler struct {
+	DB *xorm.Engine
+}
 
 // Init function will initialize this handler's connection to the db
-func Init(DB *xorm.Engine) {
-	db = DB
+func (t *TransactionHandler) Init(DB *xorm.Engine) {
+	t.DB = DB
 }
 
 // GetTransactions returns an array of transactions made by a user
-func GetTransactions(w http.ResponseWriter, r *http.Request) {
+func (t *TransactionHandler) GetTransactions(w http.ResponseWriter, r *http.Request) {
 
 	// get user id from url
 	userID, err := strconv.ParseInt(mux.Vars(r)["ID"], 10, 64)
@@ -46,7 +49,7 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	transactionList := []Transactions.Transaction{}
 
 	// find all transactions with given user id
-	if err := ORM.Find(db, &Transactions.Transaction{UserID: userID}, &transactionList); err != nil {
+	if err := ORM.Find(t.DB, &Transactions.Transaction{UserID: userID}, &transactionList); err != nil {
 		log.Println(err)
 		http.Error(w, "Unable to get transactions from database", http.StatusInternalServerError)
 		return
@@ -66,7 +69,7 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 
 // CreateTransaction will execute user transactions and update the database with the
 // desired transaction.
-func CreateTransaction(w http.ResponseWriter, r *http.Request) {
+func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	// get user id from url
@@ -100,7 +103,7 @@ func CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	stock := Stocks.Stock{Symbol: symbol}
-	if err = ORM.FindBy(db, &stock); err != nil || userID < 1 {
+	if err = ORM.FindBy(t.DB, &stock); err != nil || userID < 1 {
 		log.Println(err)
 		http.Error(w, "Stock symbol not found", http.StatusNotFound)
 		return
@@ -146,7 +149,7 @@ func CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// store new transaction into database
-	if err = ORM.Store(db, &transaction); err != nil {
+	if err = ORM.Store(t.DB, &transaction); err != nil {
 		log.Println(err)
 		http.Error(w, "Unable to make transaction", http.StatusInternalServerError)
 		return

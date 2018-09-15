@@ -5,7 +5,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
-	V1SubRoutes "github.com/bernardjkim/ptrade-api/src/controllers/v1/router"
+	V1 "github.com/bernardjkim/ptrade-api/src/controllers/v1/router"
 )
 
 // Router is a wrapper for a mux router.
@@ -28,7 +28,12 @@ func (r *Router) Init(db *xorm.Engine) {
 			Handler(route.HandlerFunc)
 	}
 
-	v1SubRoutes := V1SubRoutes.GetRoutes(db)
+	var (
+		v1SubRouter V1.SubRouter
+	)
+
+	v1SubRouter.Init(db)
+	v1SubRoutes := v1SubRouter.GetRoutes(db)
 	for name, pack := range v1SubRoutes {
 		r.AttachSubRouterWithMiddleware(name, pack.Routes, pack.Middleware)
 	}
