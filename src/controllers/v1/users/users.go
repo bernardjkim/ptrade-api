@@ -70,8 +70,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	firstName := r.FormValue("firstName")
-	lastName := r.FormValue("lastName")
+	first := r.FormValue("first")
+	last := r.FormValue("last")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
@@ -103,8 +103,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.First = firstName
-	user.Last = lastName
+	user.First = first
+	user.Last = last
 	user.Password = encryptedPassword
 
 	// store new user into database
@@ -114,5 +114,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// remove password in response
+	user.Password = ""
+
+	packet, err := json.Marshal(user)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unable to marshal json", http.StatusInternalServerError)
+	}
+
 	w.WriteHeader(http.StatusCreated)
+	w.Write(packet)
 }
