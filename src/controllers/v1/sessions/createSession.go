@@ -16,7 +16,7 @@ import (
 
 // CreateSession function attempts to authenticate user with given credentials.
 // Responds with jwt token if successful.
-func CreateSession(w http.ResponseWriter, r *http.Request) {
+func (s *SessionHandler) CreateSession(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	email := r.FormValue("email")
@@ -30,7 +30,7 @@ func CreateSession(w http.ResponseWriter, r *http.Request) {
 
 	// check if user with matching email exists in database
 	user := Users.User{Email: email}
-	if err := ORM.FindBy(db, &user); err != nil || user.ID < 1 {
+	if err := ORM.FindBy(s.DB, &user); err != nil || user.ID < 1 {
 		log.Println(err)
 		http.Error(w, "Credentials do not match.", http.StatusUnauthorized)
 		return

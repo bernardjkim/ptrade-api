@@ -9,19 +9,27 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/transactions"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 	"github.com/bernardjkim/ptrade-api/src/system/jwt"
 
 	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
-	SessionHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
-	StockHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
-	TransactionHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/transactions"
-	UserHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 )
 
-var db *xorm.Engine
+// SubRouter needs to be initialized with a db connection
+type SubRouter struct {
+	DB *xorm.Engine
+}
+
+// Init will initialize this router's routes and database connection.
+func (sr *SubRouter) Init(db *xorm.Engine) {
+	sr.DB = db
+}
 
 // AuthMiddleware handles authentication of requests received by router
-func AuthMiddleware(next http.Handler) http.Handler {
+func (sr *SubRouter) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// check if token is present
@@ -33,7 +41,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// get owner of token
-		user, err := jwt.GetUserFromToken(db, tokenVal)
+		user, err := jwt.GetUserFromToken(sr.DB, tokenVal)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusUnauthorized)
@@ -49,13 +57,18 @@ func AuthMiddleware(next http.Handler) http.Handler {
 }
 
 // GetRoutes returns mappings from names to subroute packages.
-func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
-	db = DB
+func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
+	var (
+		userHandler        users.UserHandler
+		stockHandler       stocks.StockHandler
+		transactionHandler transactions.TransactionHandler
+		sessionHandler     sessions.SessionHandler
+	)
 
-	SessionHandler.Init(db)
-	TransactionHandler.Init(db)
-	StockHandler.Init(db)
-	UserHandler.Init(db)
+	sessionHandler.Init(sr.DB)
+	transactionHandler.Init(sr.DB)
+	stockHandler.Init(sr.DB)
+	userHandler.Init(sr.DB)
 
 	/* ROUTES */
 
@@ -71,14 +84,14 @@ func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 
 		"/v1/sessions": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"CreateSession", "POST", "", SessionHandler.CreateSession},
+				routes.Route{"CreateSession", "POST", "", sessionHandler.CreateSession},
 				routes.Route{"DeleteSession", "DELETE", "", NotImplemented},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
 		"/v1/stocks": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"GetStocks", "GET", "", StockHandler.GetStocks},
+				routes.Route{"GetStocks", "GET", "", stockHandler.GetStocks},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
@@ -91,20 +104,20 @@ func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 				// TODO: currently have users GET/POST transactions directly.
 				// maybe want to have user create orders first and later
 				// execute transaction
-				routes.Route{"GetUserTxns", "GET", "", TransactionHandler.GetTransactions},
-				routes.Route{"CreateUserTxn", "POST", "", TransactionHandler.CreateTransaction},
+				routes.Route{"GetUserTxns", "GET", "", transactionHandler.GetTransactions},
+				routes.Route{"CreateUserTxn", "POST", "", transactionHandler.CreateTransaction},
 
 				routes.Route{"GetUserTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
 			},
-			Middleware: []mux.MiddlewareFunc{AuthMiddleware},
+			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
 		},
 		"/v1/users": routes.SubRoutePackage{
 			Routes: routes.Routes{
 
 				routes.Route{"GetUsers", "GET", "", NotImplemented},
-				routes.Route{"CreateUser", "POST", "", UserHandler.CreateUser},
+				routes.Route{"CreateUser", "POST", "", userHandler.CreateUser},
 
-				routes.Route{"GetUser", "GET", "/{ID:[0-9]+}", UserHandler.GetUser},
+				routes.Route{"GetUser", "GET", "/{ID:[0-9]+}", userHandler.GetUser},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
