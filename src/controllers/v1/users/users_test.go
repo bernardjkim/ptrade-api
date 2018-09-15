@@ -10,21 +10,21 @@ import (
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strconv"
 	"strings"
 	"testing"
 
-	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
-	UserHandler "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
+	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 	DB "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
 // NOTE: trimming reponse body of \n because http.Error calls Fprintln which
 // adds a new line to the end of the error msg.
 
-var db *xorm.Engine
+var userHandler UserHandler
 
 // init will initialize connection to database, and return a pointer to
 // the xorm.Engine.
@@ -36,24 +36,23 @@ func init() {
 		log.Println("Unable to get database url")
 	}
 
-	testDB, err := DB.ConnectURL(url, "parseTime=true")
+	db, err := DB.ConnectURL(url, "parseTime=true")
 	if err != nil {
 		log.Println("Unable to connect to db")
 		panic(err)
 	}
 
-	DB.Init(testDB)
-	db = testDB
+	DB.Init(db)
 
 	// initialize user handler
-	UserHandler.Init(db)
+	userHandler.Init(db)
 }
 
 // clearUserTable will delete all entries in the 'users' table and reset the
 // auto increment to start at 1.
 func clearUserTable() {
-	db.Exec("DELETE FROM users")
-	db.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
+	userHandler.DB.Exec("DELETE FROM users")
+	userHandler.DB.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
 }
 
 // handleRequest will handle the given request with the given handlerFunc and
@@ -71,26 +70,18 @@ func handleRequest(req *http.Request, handlerFunc http.HandlerFunc) (rr *httptes
 // Should return status 200, but the body should not contain any user
 // information besides the user id that was provided.
 func TestEmptyTableGetUser(t *testing.T) {
-
 	clearUserTable()
 
-	// Create GET request for user information specified by id
-	req := httptest.NewRequest("GET", "/v1/users/{ID:[0-9]+}", nil)
-
-	// set url variables
-	vars := map[string]string{
-		"ID": "1",
-	}
-	req = mux.SetURLVars(req, vars)
-
-	// handle request and record response
-	rr := handleRequest(req, UserHandler.GetUser)
+	// get user of id 1
+	u := user{1, "", "", "", ""}
+	req := u.getUserReq()
+	rr := handleRequest(req, userHandler.GetUser)
 
 	// Verify response code
 	equals(t, http.StatusOK, rr.Code)
 
 	// Verify response body
-	exp := `{"id":1,"first":"","last":"","email":"","password":""}`
+	exp := u.toString()
 	act := strings.TrimSuffix(rr.Body.String(), "\n")
 	equals(t, exp, act)
 }
@@ -98,26 +89,19 @@ func TestEmptyTableGetUser(t *testing.T) {
 // TestCreateNewUser will just test whether we can successfully create a new
 // user in an empty table.
 func TestCreateNewUser(t *testing.T) {
-
 	clearUserTable()
 
-	req := httptest.NewRequest("POST", "/v1/users", nil)
-
-	form := url.Values{}
-	form.Add("first", "John")
-	form.Add("last", "Doe")
-	form.Add("email", "johndoe@email.com")
-	form.Add("password", "password")
-	req.Form = form
-
-	// handle request and record response
-	rr := handleRequest(req, UserHandler.CreateUser)
+	// **Test missing email**
+	u := user{1, "John", "Doe", "johndoe@email.com", "password"}
+	req := u.createUserReq()
+	rr := handleRequest(req, userHandler.CreateUser)
 
 	// Verify response code
 	equals(t, http.StatusCreated, rr.Code)
 
 	// Verify response body
-	exp := `{"id":1,"first":"John","last":"Doe","email":"johndoe@email.com","password":""}`
+	u.Password = "" // password will be dropped in response
+	exp := u.toString()
 	act := strings.TrimSuffix(rr.Body.String(), "\n")
 	equals(t, exp, act)
 }
@@ -125,27 +109,18 @@ func TestCreateNewUser(t *testing.T) {
 // TestCreateRepeatedUser will test the reponse when two requests to create
 // a new user are made with the same email.
 func TestCreateRepeatedUser(t *testing.T) {
-
 	clearUserTable()
 
-	req := httptest.NewRequest("POST", "/v1/users", nil)
-
-	form := url.Values{}
-	form.Add("first", "John")
-	form.Add("last", "Doe")
-	form.Add("email", "johndoe@email.com")
-	form.Add("password", "password")
-	req.Form = form
-
-	// handle request and record response
-	_ = handleRequest(req, UserHandler.CreateUser)
-	rr := handleRequest(req, UserHandler.CreateUser)
+	u := user{1, "John", "Doe", "johndoe@email.com", "password"}
+	req := u.createUserReq()
+	_ = handleRequest(req, userHandler.CreateUser)
+	rr := handleRequest(req, userHandler.CreateUser)
 
 	// Verify response code
 	equals(t, http.StatusBadRequest, rr.Code)
 
 	// Verify response body
-	exp := `Email is already in use`
+	exp := "Email is already in use"
 	act := strings.TrimSuffix(rr.Body.String(), "\n")
 	equals(t, exp, act)
 }
@@ -153,49 +128,79 @@ func TestCreateRepeatedUser(t *testing.T) {
 // TestMissingFieldsCreateUser will test the reponse when email or password
 // are missing from the request.
 func TestMissingFieldsCreateUser(t *testing.T) {
-
 	clearUserTable()
 
-	req := httptest.NewRequest("POST", "/v1/users", nil)
-
 	// **Test missing email**
-
-	form := url.Values{}
-	form.Add("first", "John")
-	form.Add("last", "Doe")
-	form.Add("email", "")
-	form.Add("password", "password")
-	req.Form = form
-
-	rr := handleRequest(req, UserHandler.CreateUser)
+	u := user{0, "John", "Doe", "johndoe@email.com", "password"}
+	req := u.createUserReq()
+	req.Form.Set("email", "")
+	rr := handleRequest(req, userHandler.CreateUser)
 
 	// Verify response code
 	equals(t, http.StatusBadRequest, rr.Code)
 
 	// Verify response body
-	exp := `Email and password are required.`
+	exp := "Email and password are required."
 	act := strings.TrimSuffix(rr.Body.String(), "\n")
 	equals(t, exp, act)
 
 	// **Test missing password**
 
-	form.Set("email", "johndoe@email.com")
-	form.Set("password", "")
-	req.Form = form
-
-	// handle request and record response
-	rr = handleRequest(req, UserHandler.CreateUser)
+	req.Form.Set("email", "johndoe@email.com")
+	req.Form.Set("password", "")
+	rr = handleRequest(req, userHandler.CreateUser)
 
 	// Verify response code
 	equals(t, http.StatusBadRequest, rr.Code)
 
 	// Verify response body
-	exp = `Email and password are required.`
+	exp = "Email and password are required."
 	act = strings.TrimSuffix(rr.Body.String(), "\n")
 	equals(t, exp, act)
 }
 
+type user struct {
+	ID       int64
+	First    string
+	Last     string
+	Email    string
+	Password string
+}
+
+// createUserReq will return a *http.Request to serve to the CreateUser handler
+func (u *user) createUserReq() (req *http.Request) {
+	req = httptest.NewRequest("POST", "/v1/users", nil)
+	req.Form = url.Values{
+		"first":    {u.First},
+		"last":     {u.Last},
+		"email":    {u.Email},
+		"password": {u.Password},
+	}
+	return
+}
+
+// getUserReq will return a *http.Request to serve to the GetUser handler
+func (u *user) getUserReq() (req *http.Request) {
+	req = httptest.NewRequest("GET", "/v1/users/{ID:[0-9]+}", nil)
+	vars := map[string]string{
+		"ID": strconv.Itoa(int(u.ID)),
+	}
+	req = mux.SetURLVars(req, vars)
+	return
+}
+
+func (u *user) toString() (s string) {
+	s = `{"id":` + strconv.Itoa(int(u.ID)) +
+		`,"first":"` + u.First +
+		`","last":"` + u.Last +
+		`","email":"` + u.Email +
+		`","password":"` + u.Password + `"}`
+	return
+}
+
+//
 // ** https://github.com/benbjohnson/testing **
+//
 
 // assert fails the test if the condition is false.
 func assert(tb testing.TB, condition bool, msg string, v ...interface{}) {
