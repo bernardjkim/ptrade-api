@@ -18,25 +18,30 @@ users authentication token.
 <div id="users-user" class="resource"><h3 class="resource-heading">User <a href="#users-user" class="permalink">&nbsp;&para;</a></h3><p>A User object contains basic user profile information</p>
 <div id="users-user-get" class="action get"><h4 class="action-heading"><div class="name">Return a User</div><a href="#users-user-get" class="method get">GET</a><code class="uri">/v1/users/{user_id}</code></h4><p>Return a specific User.</p>
 <h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User.</p>
-</dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-    <span class="hljs-string">"id"</span>: <span class="hljs-number">11</span>,
-    <span class="hljs-string">"first"</span>: <span class="hljs-string">"Allen"</span>,
-    <span class="hljs-string">"last"</span>: <span class="hljs-string">"Iverson"</span>,
-    <span class="hljs-string">"email"</span>: <span class="hljs-string">"alleniverson@gmail.com"</span>,
-    <span class="hljs-string">"password"</span>: <span class="hljs-string">"password"</span>, <span class="hljs-comment">// password will be dropped in responses</span>
+</dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">11</span></span>,
+    "<span class="hljs-attribute">first</span>": <span class="hljs-value"><span class="hljs-string">"Allen"</span></span>,
+    "<span class="hljs-attribute">last</span>": <span class="hljs-value"><span class="hljs-string">"Iverson"</span></span>,
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"alleniverson@gmail.com"</span></span>,
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">""</span></span>,
 }</code></pre><div style="height: 1px;"></div></div></div></div><div id="users-user-delete" class="action delete"><h4 class="action-heading"><div class="name">Delete a User</div><a href="#users-user-delete" class="method delete">DELETE</a><code class="uri">/v1/users/{user_id}</code></h4><p>Delete a specific User.
 <strong>NOT IMPLEMENTED</strong></p>
 <h4>Example URI</h4><div class="definition"><span class="method delete">DELETE</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User.</p>
 </dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>204</code></strong></div></div></div><div id="users-users-collection" class="resource"><h3 class="resource-heading">Users Collection <a href="#users-users-collection" class="permalink">&nbsp;&para;</a></h3><p>A Collection of users.</p>
 <div id="users-users-collection-post" class="action post"><h4 class="action-heading"><div class="name">Create a User</div><a href="#users-users-collection-post" class="method post">POST</a><code class="uri">/v1/users</code></h4><p>Create a new User object. The email must not have been used previously to create a
 different user’s profile.</p>
-<h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-    <span class="hljs-string">"id"</span>: <span class="hljs-number">11</span>,
-    <span class="hljs-string">"first"</span>: <span class="hljs-string">"Allen"</span>,
-    <span class="hljs-string">"last"</span>: <span class="hljs-string">"Iverson"</span>,
-    <span class="hljs-string">"email"</span>: <span class="hljs-string">"alleniverson@gmail.com"</span>,
-    <span class="hljs-string">"password"</span>: <span class="hljs-string">"password"</span>, <span class="hljs-comment">// password will be dropped in responses</span>
-}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>201</code></strong></div></div><div id="users-users-collection-get" class="action get"><h4 class="action-heading"><div class="name">Return all Users</div><a href="#users-users-collection-get" class="method get">GET</a><code class="uri">/v1/users</code></h4><p>Return all users.
+<h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">first</span>": <span class="hljs-value"><span class="hljs-string">"Allen"</span></span>,
+    "<span class="hljs-attribute">last</span>": <span class="hljs-value"><span class="hljs-string">"Iverson"</span></span>,
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"alleniverson@gmail.com"</span></span>,
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">"password"</span></span>,
+}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>201</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">11</span></span>,
+    "<span class="hljs-attribute">first</span>": <span class="hljs-value"><span class="hljs-string">"Allen"</span></span>,
+    "<span class="hljs-attribute">last</span>": <span class="hljs-value"><span class="hljs-string">"Iverson"</span></span>,
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"alleniverson@gmail.com"</span></span>,
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">""</span></span>,
+}</code></pre><div style="height: 1px;"></div></div></div></div><div id="users-users-collection-get" class="action get"><h4 class="action-heading"><div class="name">Return all Users</div><a href="#users-users-collection-get" class="method get">GET</a><code class="uri">/v1/users</code></h4><p>Return all users.
 <strong>NOT IMPLEMENTED</strong></p>
 <h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users</span></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
     [
@@ -62,6 +67,7 @@ It has a timestamp, share price, quantity, stock_id, …</p>
 <h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span>/transactions/<span class="hljs-attribute" title="txn_id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User.</p>
 </dd><dt>txn_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the Transaction.</p>
 </dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+    <span class="hljs-string">"id"</span>: <span class="hljs-number">123</span>,
     <span class="hljs-string">"user_id"</span>: <span class="hljs-number">11</span>,
     <span class="hljs-string">"stock_id"</span>: <span class="hljs-number">16397</span>,
     <span class="hljs-string">"date"</span>: <span class="hljs-string">"2018-09-04T12:00:00Z"</span>, <span class="hljs-comment">// dropped in requests</span>
@@ -72,32 +78,43 @@ It has a timestamp, share price, quantity, stock_id, …</p>
 <h4>Example URI</h4><div class="definition"><span class="method delete">DELETE</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span>/transactions/<span class="hljs-attribute" title="txn_id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User.</p>
 </dd><dt>txn_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the Transaction.</p>
 </dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>204</code></strong></div></div></div><div id="transactions-transactions-collection" class="resource"><h3 class="resource-heading">Transactions Collection <a href="#transactions-transactions-collection" class="permalink">&nbsp;&para;</a></h3><div id="transactions-transactions-collection-post" class="action post"><h4 class="action-heading"><div class="name">Create a new Transaction</div><a href="#transactions-transactions-collection-post" class="method post">POST</a><code class="uri">/v1/users/{user_id}/transactions</code></h4><p>Create a new transaction for the specified user.</p>
-<h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span>/transactions</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User</p>
-</dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-    <span class="hljs-string">"user_id"</span>: <span class="hljs-number">11</span>,
-    <span class="hljs-string">"stock_id"</span>: <span class="hljs-number">16397</span>,
-    <span class="hljs-string">"date"</span>: <span class="hljs-string">"2018-09-04T12:00:00Z"</span>, <span class="hljs-comment">// dropped in requests</span>
-    <span class="hljs-string">"price"</span>: <span class="hljs-number">227.63</span>,                <span class="hljs-comment">// dropped in requests</span>
-    <span class="hljs-string">"quantity"</span>: <span class="hljs-number">5</span>
-}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>201</code></strong></div></div><div id="transactions-transactions-collection-get" class="action get"><h4 class="action-heading"><div class="name">Retrieve all Transactions</div><a href="#transactions-transactions-collection-get" class="method get">GET</a><code class="uri">/v1/users/{user_id}/transactions</code></h4><p>Retrieve all transactions made by the specified user.</p>
-<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span>/transactions</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User</p>
+<h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span>/transactions</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User.</p>
+</dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">user_id</span>": <span class="hljs-value"><span class="hljs-number">11</span></span>,
+    "<span class="hljs-attribute">symbol</span>": <span class="hljs-value"><span class="hljs-string">"AAPL"</span></span>,
+    "<span class="hljs-attribute">quantity</span>": <span class="hljs-value"><span class="hljs-number">5</span></span>,
+}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>201</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Body</h5><pre><code>{
+  "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">123</span></span>,
+  "<span class="hljs-attribute">user_id</span>": <span class="hljs-value"><span class="hljs-number">11</span></span>,
+  "<span class="hljs-attribute">stock_id</span>": <span class="hljs-value"><span class="hljs-number">16397</span></span>,
+  "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2018-09-04T12:00:00Z"</span></span>,
+  "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">227.63</span></span>,
+  "<span class="hljs-attribute">quantity</span>": <span class="hljs-value"><span class="hljs-number">5</span>
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div><div id="transactions-transactions-collection-get" class="action get"><h4 class="action-heading"><div class="name">Retrieve all Transactions</div><a href="#transactions-transactions-collection-get" class="method get">GET</a><code class="uri">/v1/users/{user_id}/transactions</code></h4><p>Retrieve all transactions made by the specified user.</p>
+<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://ptrade-api-staging.herokuapp.com</span>/v1/users/<span class="hljs-attribute" title="user_id">1</span>/transactions</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>user_id</dt><dd><code>int</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span><p>The id of the User.</p>
 </dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Body</h5><pre><code>{
     [
         {
-            <span class="hljs-string">"user_id"</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-string">"id"</span>: <span class="hljs-number">123</span>,
+            <span class="hljs-string">"user_id"</span>: <span class="hljs-number">11</span>,
+            <span class="hljs-string">"stock_id"</span>: <span class="hljs-number">16397</span>,
             ...
         },
         {
-            <span class="hljs-string">"user_id"</span>: <span class="hljs-number">2</span>,
+            <span class="hljs-string">"id"</span>: <span class="hljs-number">124</span>,
+            <span class="hljs-string">"user_id"</span>: <span class="hljs-number">11</span>,
+            <span class="hljs-string">"stock_id"</span>: <span class="hljs-number">16597</span>,
             ...
         },
         {
-            <span class="hljs-string">"user_id"</span>: <span class="hljs-number">3</span>,
+            <span class="hljs-string">"id"</span>: <span class="hljs-number">125</span>,
+            <span class="hljs-string">"user_id"</span>: <span class="hljs-number">11</span>,
+            <span class="hljs-string">"stock_id"</span>: <span class="hljs-number">16147</span>,
             ...
         },
         ...
     ]
-}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 13 Sep 2018</p><script>/* eslint-env browser */
+}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 15 Sep 2018</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 
