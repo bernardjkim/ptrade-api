@@ -1,5 +1,5 @@
 {
-  "name": "bjstock-rest-service",
+  "name": "ptrade-api",
   "scripts": {
   },
   "env": {
@@ -7,9 +7,7 @@
   "formation": {
   },
   "addons": [
-
   ],
   "buildpacks": [
-
   ]
 }

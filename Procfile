@@ -1,2 +1,2 @@
-web: server
+web: ptrade-api
 

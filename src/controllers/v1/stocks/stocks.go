@@ -5,29 +5,32 @@ import (
 	"log"
 	"net/http"
 
-	Stocks "github.com/bkim0128/stock/server/pkg/types/stocks"
-	ORM "github.com/bkim0128/stock/server/src/system/db"
+	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
+	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
 
 	"github.com/go-xorm/xorm"
 )
 
-var db *xorm.Engine
+// StockHandler struct needs to be initialized with a database connection.
+type StockHandler struct {
+	DB *xorm.Engine
+}
 
 // Init function initializes db connection
-func Init(DB *xorm.Engine) {
-	db = DB
+func (s *StockHandler) Init(DB *xorm.Engine) {
+	s.DB = DB
 }
 
 // GetStocks function will return a list of available stock data containing
 // id, symbol, and company name.
-func GetStocks(w http.ResponseWriter, r *http.Request) {
+func (s *StockHandler) GetStocks(w http.ResponseWriter, r *http.Request) {
 
 	stockList := Stocks.StockList{}
 
 	// get list of available stocks from database
-	if err := ORM.Find(db, &Stocks.Stock{}, &stockList); err != nil {
+	if err := ORM.Find(s.DB, &Stocks.Stock{}, &stockList); err != nil {
 		log.Println(err)
-		http.Error(w, "unable to get stock list", http.StatusNotFound) //TODO: status code
+		http.Error(w, "Unable to get stock list", http.StatusInternalServerError)
 		return
 	}
 
@@ -35,7 +38,7 @@ func GetStocks(w http.ResponseWriter, r *http.Request) {
 	packet, err := json.Marshal(stockList)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to marshal json.", http.StatusNotFound) // TODO: status code
+		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
 		return
 	}
 

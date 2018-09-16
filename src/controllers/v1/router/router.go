@@ -1,71 +1,50 @@
 package router
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
-	"github.com/bkim0128/stock/server/pkg/types/routes"
-	"github.com/bkim0128/stock/server/src/system/jwt"
+	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/transactions"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
+	"github.com/bernardjkim/ptrade-api/src/system/jwt"
 
-	Users "github.com/bkim0128/stock/server/pkg/types/users"
-	AuthHandler "github.com/bkim0128/stock/server/src/controllers/v1/auth"
-	StockHandler "github.com/bkim0128/stock/server/src/controllers/v1/stocks"
-	TransactionHandler "github.com/bkim0128/stock/server/src/controllers/v1/transactions"
-	UserHandler "github.com/bkim0128/stock/server/src/controllers/v1/users"
+	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 )
 
-var db *xorm.Engine
-
-// Middleware for subrouter. Currently just calls the next handler.
-func Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		next.ServeHTTP(w, r)
-	})
+// SubRouter needs to be initialized with a db connection
+type SubRouter struct {
+	DB *xorm.Engine
 }
 
-// LoggingMiddleware logs all requests received by router
-func LoggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		// TODO: what to log?
-		// Dont want to log certain requests that may hold sesitive information
-		bodyBytes, _ := ioutil.ReadAll(r.Body)
-		r.Body.Close() //  must close
-		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
-		bodyString := string(bodyBytes)
-		log.Println(bodyString)
-
-		next.ServeHTTP(w, r)
-	})
+// Init will initialize this router's routes and database connection.
+func (sr *SubRouter) Init(db *xorm.Engine) {
+	sr.DB = db
 }
 
 // AuthMiddleware handles authentication of requests received by router
-func AuthMiddleware(next http.Handler) http.Handler {
+func (sr *SubRouter) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		fmt.Println("Auth Middleware")
-		fmt.Println(r.URL)
 
 		// check if token is present
 		tokenVal := r.Header.Get("X-App-Token")
 		if len(tokenVal) < 1 {
 			log.Println("Ignoring request. No token present.")
-			http.Error(w, "No token provided for validation.", http.StatusUnauthorized) //TODO: status code
+			http.Error(w, "No token provided for validation.", http.StatusUnauthorized)
 			return
 		}
 
 		// get owner of token
-		user, err := jwt.GetUserFromToken(db, tokenVal)
+		user, err := jwt.GetUserFromToken(sr.DB, tokenVal)
 		if err != nil {
 			log.Println(err)
-			http.Error(w, err.Error(), http.StatusUnauthorized) //TODO: status code
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
@@ -78,58 +57,78 @@ func AuthMiddleware(next http.Handler) http.Handler {
 }
 
 // GetRoutes returns mappings from names to subroute packages.
-func GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
-	db = DB
+func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
+	var (
+		userHandler        users.UserHandler
+		stockHandler       stocks.StockHandler
+		transactionHandler transactions.TransactionHandler
+		sessionHandler     sessions.SessionHandler
+	)
 
-	AuthHandler.Init(DB)
-	TransactionHandler.Init(DB)
-	StockHandler.Init(DB)
-	UserHandler.Init(DB)
+	sessionHandler.Init(sr.DB)
+	transactionHandler.Init(sr.DB)
+	stockHandler.Init(sr.DB)
+	userHandler.Init(sr.DB)
 
 	/* ROUTES */
-
-	// TODO: nested subrouters
-	// how to add a subroute to the subroute?
 
 	// Warning: Composite literal uses unkeyed fields.
 	// Can remove warnings by including field names (field: value).
 	SubRoute = map[string]routes.SubRoutePackage{
-		"/v1/auth": routes.SubRoutePackage{
+		"/v1": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"AuthLogin", "POST", "/login", AuthHandler.Login},
-				routes.Route{"AuthLogout", "POST", "/logout", NotImplemented}, // TODO: implement logout function
-
-				// TODO: move to POST /users ?
-				routes.Route{"AuthSignup", "POST", "/signup", AuthHandler.SignUp},
+				routes.Route{"GetIndex", "GET", "", GetIndex},
 			},
-			Middleware: []mux.MiddlewareFunc{LoggingMiddleware},
+			Middleware: []mux.MiddlewareFunc{},
+		},
+
+		"/v1/sessions": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				routes.Route{"CreateSession", "POST", "", sessionHandler.CreateSession},
+				routes.Route{"DeleteSession", "DELETE", "", NotImplemented},
+			},
+			Middleware: []mux.MiddlewareFunc{},
 		},
 		"/v1/stocks": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"StockData", "GET", "/", StockHandler.GetStocks},
+				routes.Route{"GetStocks", "GET", "", stockHandler.GetStocks},
 			},
-			Middleware: []mux.MiddlewareFunc{LoggingMiddleware},
+			Middleware: []mux.MiddlewareFunc{},
 		},
-		"/v1/users": routes.SubRoutePackage{
-			Routes: routes.Routes{
 
-				routes.Route{"GetUsers", "GET", "/", NotImplemented},
-				routes.Route{"GetUser", "GET", "/{ID:[0-9]+}", UserHandler.GetUser},
+		// NOTE: order matters, match /user/.../transactions subroute before /users
+		// was not using the assigned middleware
+		"/v1/users/{ID:[0-9]+}/transactions": routes.SubRoutePackage{
+			Routes: routes.Routes{
 
 				// TODO: currently have users GET/POST transactions directly.
 				// maybe want to have user create orders first and later
 				// execute transaction
+				routes.Route{"GetUserTxns", "GET", "", transactionHandler.GetTransactions},
+				routes.Route{"CreateUserTxn", "POST", "", transactionHandler.CreateTransaction},
 
-				routes.Route{"GetUserTxns", "GET", "/{ID:[0-9]+}/transactions", TransactionHandler.GetTransactions},
-				routes.Route{"CreateUserTxn", "POST", "/self/transactions", TransactionHandler.BuyShares},
-
-				routes.Route{"GetUserTxn", "GET", "/{ID:[0-9]+}/transaction/{txnID:[0-9]+}", NotImplemented},
+				routes.Route{"GetUserTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
 			},
-			Middleware: []mux.MiddlewareFunc{LoggingMiddleware, AuthMiddleware},
+			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
+		},
+		"/v1/users": routes.SubRoutePackage{
+			Routes: routes.Routes{
+
+				routes.Route{"GetUsers", "GET", "", NotImplemented},
+				routes.Route{"CreateUser", "POST", "", userHandler.CreateUser},
+
+				routes.Route{"GetUser", "GET", "/{ID:[0-9]+}", userHandler.GetUser},
+			},
+			Middleware: []mux.MiddlewareFunc{},
 		},
 	}
 	return
 }
+
+// GetIndex will return the index for the api
+var GetIndex = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "index.html")
+})
 
 // NotImplemented handler is used for API endpoints not yet implemented and will
 // return the message "Not Implemented".

@@ -1,7 +1,7 @@
 package users
 
 import (
-	"github.com/bkim0128/stock/server/pkg/db"
+	"github.com/bernardjkim/ptrade-api/pkg/db"
 )
 
 type Users []User
@@ -13,5 +13,5 @@ type key string
 const UserIDKey key = "userID"
 
 func (u *User) TableName() string {
-	return "user_table"
+	return "users"
 }

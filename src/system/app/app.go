@@ -1,17 +1,16 @@
 package app
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/bkim0128/stock/server/src/system/router"
-
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
+
+	"github.com/bernardjkim/ptrade-api/src/system/router"
 )
 
 // Server struct contains a port number and a reference to a connected database.
@@ -31,10 +30,7 @@ func (s *Server) Init(port string, db *xorm.Engine) {
 	s.port = ":" + port
 	s.Db = db
 
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("unable to load .env file")
-		// panic(err)
-	}
+	_ = godotenv.Load()
 
 	envPort := os.Getenv("PORT")
 	if len(envPort) > 0 {

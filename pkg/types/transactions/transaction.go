@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"github.com/bkim0128/stock/server/pkg/db"
+	"github.com/bernardjkim/ptrade-api/pkg/db"
 )
 
 // type Portfolio []Transaction
@@ -9,5 +9,5 @@ import (
 type Transaction db.TransactionTable
 
 func (t *Transaction) TableName() string {
-	return "transaction_table"
+	return "transactions"
 }

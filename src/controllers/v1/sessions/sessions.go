@@ -1,10 +1,8 @@
-package session
+package sessions
 
 import (
 	"github.com/go-xorm/xorm"
 )
-
-var db *xorm.Engine
 
 // LoginData holds user token and data
 // type LoginData struct {
@@ -12,7 +10,12 @@ var db *xorm.Engine
 // 	User  Users.User `json:"user"`
 // }
 
+// SessionHandler struct needs to be initialized with a database connection.
+type SessionHandler struct {
+	DB *xorm.Engine
+}
+
 // Init function initializes this sessions db connection
-func Init(DB *xorm.Engine) {
-	db = DB
+func (s *SessionHandler) Init(DB *xorm.Engine) {
+	s.DB = DB
 }

@@ -16,8 +16,8 @@
 [[projects]]
   name = "github.com/go-xorm/builder"
   packages = ["."]
-  revision = "dc8bf48f58fab2b4da338ffd25191905fd741b8f"
-  version = "v0.3.0"
+  revision = "145c9968bfe732a56d7160439d25154c5aaa2f35"
+  version = "v0.3.1"
 
 [[projects]]
   name = "github.com/go-xorm/core"
@@ -56,19 +56,13 @@
   version = "v1.2.0"
 
 [[projects]]
-  name = "github.com/mattn/go-sqlite3"
-  packages = ["."]
-  revision = "25ecb14adfc7543176f7d85291ec7dba82c6f7e4"
-  version = "v1.9.0"
-
-[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
     "blowfish"
   ]
-  revision = "c126467f60eb25f8f27e5a981f32a87e3965053f"
+  revision = "0709b304e793a5edb4a2c0145f281ecdc20838a4"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -79,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "df6d9d85456bba7dff2958f0b4817b5b294daa971a6387da088b424ed7624d2e"
+  inputs-digest = "845a41ac5f9145865e28e4ad28a0cc0a1d4b139d92409a5a718c0a244dba994e"
   solver-name = "gps-cdcl"
   solver-version = 1
