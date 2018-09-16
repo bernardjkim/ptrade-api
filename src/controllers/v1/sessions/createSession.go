@@ -28,11 +28,17 @@ func (s *SessionHandler) CreateSession(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// check if user with matching email exists in database
 	user := Users.User{Email: email}
-	if err := ORM.FindBy(s.DB, &user); err != nil || user.ID < 1 {
+	if err := ORM.FindBy(s.DB, &user); err != nil {
 		log.Println(err)
-		http.Error(w, "Credentials do not match.", http.StatusUnauthorized)
+		http.Error(w, "Unable to find users.", http.StatusInternalServerError)
+		return
+	}
+
+	// check if user with matching email exists in database
+	if user.ID < 1 {
+		log.Println(w, "Invalid email")
+		http.Error(w, "No user with provided email exists.", http.StatusNotFound)
 		return
 	}
 
