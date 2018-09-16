@@ -35,15 +35,9 @@ func (t *TransactionHandler) GetTransactions(w http.ResponseWriter, r *http.Requ
 	userID, err := strconv.ParseInt(mux.Vars(r)["ID"], 10, 64)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Provided invalid id", http.StatusBadRequest)
+		http.Error(w, "Provided invalid id.", http.StatusBadRequest)
 		return
 	}
-
-	// if curUserID := r.Context().Value(Users.UserIDKey); curUserID != userID {
-	// 	log.Println("Attepted to get another user's transactions")
-	// 	http.Error(w, "Unauthorized to make this request", http.StatusBadRequest)
-	// 	return
-	// }
 
 	// get all transactions made by user
 	transactionList := []Transactions.Transaction{}
@@ -51,7 +45,7 @@ func (t *TransactionHandler) GetTransactions(w http.ResponseWriter, r *http.Requ
 	// find all transactions with given user id
 	if err := ORM.Find(t.DB, &Transactions.Transaction{UserID: userID}, &transactionList); err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to get transactions from database", http.StatusInternalServerError)
+		http.Error(w, "Unable to get transactions from database.", http.StatusInternalServerError)
 		return
 	}
 
@@ -76,14 +70,14 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	userID, err := strconv.ParseInt(mux.Vars(r)["ID"], 10, 64)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Provided invalid id", http.StatusBadRequest)
+		http.Error(w, "Provided invalid id.", http.StatusBadRequest)
 		return
 	}
 
 	// get id of authenticated user
 	if curUserID := r.Context().Value(Users.UserIDKey); curUserID != userID {
-		log.Println("Attepted to create a transaction for another user")
-		http.Error(w, "Unauthorized to make this request", http.StatusBadRequest)
+		log.Printf("Attepted to create a txn for user: %d, authenticated as user: %d\n", userID, curUserID)
+		http.Error(w, "Unauthorized to make this request.", http.StatusUnauthorized)
 		return
 	}
 
@@ -91,21 +85,27 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	quantity, err := strconv.ParseInt(r.FormValue("quantity"), 10, 64)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Invalid quantity value", http.StatusBadRequest)
+		http.Error(w, "Invalid quantity value.", http.StatusBadRequest)
 		return
 	}
 
 	symbol := r.FormValue("symbol")
 	if len(symbol) < 1 {
 		log.Println("Symbol not provided by user")
-		http.Error(w, "No symbol provided", http.StatusBadRequest)
+		http.Error(w, "No symbol provided.", http.StatusBadRequest)
 		return
 	}
 
 	stock := Stocks.Stock{Symbol: symbol}
-	if err = ORM.FindBy(t.DB, &stock); err != nil || userID < 1 {
+	if err = ORM.FindBy(t.DB, &stock); err != nil {
 		log.Println(err)
-		http.Error(w, "Stock symbol not found", http.StatusNotFound)
+		http.Error(w, "Unable to find stock in database.", http.StatusNotFound)
+		return
+	}
+
+	if stock.ID < 1 {
+		log.Printf("Unknown stock symbol: %s", symbol)
+		http.Error(w, "Unknown stock symbol.", http.StatusBadRequest)
 		return
 	}
 
@@ -120,7 +120,7 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	resp, err := http.Get("https://api.iextrading.com/1.0/stock/" + symbol + "/price")
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to retrieve stock price", http.StatusServiceUnavailable)
+		http.Error(w, "Unable to retrieve stock price.", http.StatusServiceUnavailable)
 		return
 	}
 
@@ -128,7 +128,7 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Error reading body", http.StatusInternalServerError)
+		http.Error(w, "Error reading body.", http.StatusInternalServerError)
 		return
 	}
 
@@ -136,7 +136,7 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	price, err := strconv.ParseFloat(string(body), 64)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Error getting price", http.StatusInternalServerError)
+		http.Error(w, "Error getting price.", http.StatusInternalServerError)
 		return
 	}
 
@@ -151,7 +151,7 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	// store new transaction into database
 	if err = ORM.Store(t.DB, &transaction); err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to make transaction", http.StatusInternalServerError)
+		http.Error(w, "Unable to make transaction.", http.StatusInternalServerError)
 		return
 	}
 
