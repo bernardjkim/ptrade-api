@@ -22,7 +22,9 @@ func (s *SessionHandler) Validate(w http.ResponseWriter, r *http.Request) {
 	user, err := jwt.GetUserFromToken(s.DB, tokenVal)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		// TODO: is it possible to get an error when a valid token is given??
+		// http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Invalid Token.", http.StatusBadRequest)
 		return
 	}
 
