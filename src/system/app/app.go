@@ -49,7 +49,7 @@ func (s *Server) Start() {
 	handler := handlers.LoggingHandler(os.Stdout, handlers.CORS(
 		handlers.AllowedOrigins([]string{"*"}),
 		handlers.AllowedMethods([]string{"GET", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"}),
-		handlers.AllowedHeaders([]string{"Content-Type", "Origin", "Cache-Control", "X-App-Token"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Origin", "Cache-Control", "Session-Token"}),
 		handlers.ExposedHeaders([]string{""}),
 		handlers.MaxAge(1000),
 		handlers.AllowCredentials(),

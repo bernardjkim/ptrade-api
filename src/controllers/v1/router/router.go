@@ -33,7 +33,7 @@ func (sr *SubRouter) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// check if token is present
-		tokenVal := r.Header.Get("X-App-Token")
+		tokenVal := r.Header.Get("Session-Token")
 		if len(tokenVal) < 1 {
 			log.Println("Ignoring request. No token present.")
 			http.Error(w, "No token provided for validation.", http.StatusUnauthorized)
