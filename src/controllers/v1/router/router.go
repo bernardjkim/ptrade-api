@@ -84,6 +84,8 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 		"/v1/sessions": routes.SubRoutePackage{
 			Routes: routes.Routes{
+				// TODO: not result standards, what to do about validating auth token???
+				routes.Route{"ValidateSession", "GET", "/validate", sessionHandler.Validate},
 				routes.Route{"CreateSession", "POST", "", sessionHandler.CreateSession},
 				routes.Route{"DeleteSession", "DELETE", "", NotImplemented},
 			},
