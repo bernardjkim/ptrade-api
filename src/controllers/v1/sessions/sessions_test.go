@@ -30,7 +30,7 @@ func init() {
 
 // testSetup will clear user table and create a user to test with.
 func testSetup() {
-	Test.ClearUserTable()
+	Test.ClearTable("users")
 	createTestUser()
 
 }

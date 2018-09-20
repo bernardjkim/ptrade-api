@@ -33,7 +33,7 @@ func (sr *SubRouter) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// check if token is present
-		tokenVal := r.Header.Get("X-App-Token")
+		tokenVal := r.Header.Get("Session-Token")
 		if len(tokenVal) < 1 {
 			log.Println("Ignoring request. No token present.")
 			http.Error(w, "No token provided for validation.", http.StatusUnauthorized)
@@ -84,6 +84,8 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 		"/v1/sessions": routes.SubRoutePackage{
 			Routes: routes.Routes{
+				// TODO: not result standards, what to do about validating auth token???
+				routes.Route{"ValidateSession", "GET", "/validate", sessionHandler.Validate},
 				routes.Route{"CreateSession", "POST", "", sessionHandler.CreateSession},
 				routes.Route{"DeleteSession", "DELETE", "", NotImplemented},
 			},

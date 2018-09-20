@@ -61,7 +61,9 @@ func (s *SessionHandler) CreateSession(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// convert packet to JSON
-	packet, err := json.Marshal(token)
+	packet, err := json.Marshal(struct {
+		SessionToken string `json:"Session-Token"`
+	}{token})
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
