@@ -19,8 +19,8 @@ import (
 )
 
 type StockTransaction struct {
-	Stock       Stocks.Stock             `xorm:"extends"`
-	Transaction Transactions.Transaction `xorm:"extends"`
+	Stock       Stocks.Stock             `xorm:"extends" json:"stock"`
+	Transaction Transactions.Transaction `xorm:"extends" json:"transaction"`
 }
 
 func (StockTransaction) TableName() string {
