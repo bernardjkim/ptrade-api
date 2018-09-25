@@ -18,6 +18,15 @@ import (
 	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
+type StockTransaction struct {
+	Stock       Stocks.Stock             `xorm:"extends"`
+	Transaction Transactions.Transaction `xorm:"extends"`
+}
+
+func (StockTransaction) TableName() string {
+	return "stocks"
+}
+
 // TransactionHandler struct needs to be initialized with a database connection.
 type TransactionHandler struct {
 	DB *xorm.Engine
@@ -39,15 +48,12 @@ func (t *TransactionHandler) GetTransactions(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	// get all transactions made by user
-	transactionList := []Transactions.Transaction{}
+	var transactionList []StockTransaction
 
-	// find all transactions with given user id
-	if err := ORM.Find(t.DB, &Transactions.Transaction{UserID: userID}, &transactionList); err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to get transactions from database.", http.StatusInternalServerError)
-		return
-	}
+	// get all transactions made by user join stock info
+	t.DB.Table("stocks").Alias("s").
+		Join("INNER", []string{"transactions", "t"}, "s.id = t.stock_id").
+		Where("t.user_id=?", userID).Find(&transactionList)
 
 	// convert packet to JSON
 	packet, err := json.Marshal(transactionList)
