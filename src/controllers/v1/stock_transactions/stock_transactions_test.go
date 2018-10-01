@@ -1,4 +1,4 @@
-package transactions_test
+package stocktransactions_test
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 	Test "github.com/bernardjkim/ptrade-api/src/controllers/v1/test"
 
 	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
-	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/transactions"
+	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/stock_transactions"
 	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 )
 
