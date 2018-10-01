@@ -1,9 +1,7 @@
-package transactions
+package bankingtransactions
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,20 +10,10 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
-	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
-	Transactions "github.com/bernardjkim/ptrade-api/pkg/types/transactions"
+	BankingTransactions "github.com/bernardjkim/ptrade-api/pkg/types/banking_transactions"
 	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
 )
-
-type StockTransaction struct {
-	Stock       Stocks.Stock             `xorm:"extends" json:"stock"`
-	Transaction Transactions.Transaction `xorm:"extends" json:"transaction"`
-}
-
-func (StockTransaction) TableName() string {
-	return "stocks"
-}
 
 // TransactionHandler struct needs to be initialized with a database connection.
 type TransactionHandler struct {
@@ -48,12 +36,14 @@ func (t *TransactionHandler) GetTransactions(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	var transactionList []StockTransaction
+	var transactionList []BankingTransactions.Transaction
 
-	// get all transactions made by user join stock info
-	t.DB.Table("stocks").Alias("s").
-		Join("INNER", []string{"transactions", "t"}, "s.id = t.stock_id").
-		Where("t.user_id=?", userID).Find(&transactionList)
+	// get list of available stocks from database
+	if err := ORM.Find(t.DB, &BankingTransactions.Transaction{UserID: userID}, &transactionList); err != nil {
+		log.Println(err)
+		http.Error(w, "Unable to get banking transactions", http.StatusInternalServerError)
+		return
+	}
 
 	// convert packet to JSON
 	packet, err := json.Marshal(transactionList)
@@ -87,71 +77,19 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// TODO: buy/sell depending on sign of quantity
-	quantity, err := strconv.ParseInt(r.FormValue("quantity"), 10, 64)
+	value, err := strconv.ParseFloat(r.FormValue("value"), 64)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, "Invalid quantity value.", http.StatusBadRequest)
+		http.Error(w, "No value provided.", http.StatusBadRequest)
 		return
 	}
-
-	symbol := r.FormValue("symbol")
-	if len(symbol) < 1 {
-		log.Println("Symbol not provided by user")
-		http.Error(w, "No symbol provided.", http.StatusBadRequest)
-		return
-	}
-
-	stock := Stocks.Stock{Symbol: symbol}
-	if err = ORM.FindBy(t.DB, &stock); err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to find stock in database.", http.StatusNotFound)
-		return
-	}
-
-	if stock.ID < 1 {
-		log.Printf("Unknown stock symbol: %s", symbol)
-		http.Error(w, "Unknown stock symbol.", http.StatusBadRequest)
-		return
-	}
-
-	// TODO:
-	// - what time and value is stored?
-	// - clean up
 
 	timeStamp := time.Now()
-	fmt.Println("Time Stamp: ", timeStamp)
 
-	// get current price for a share
-	resp, err := http.Get("https://api.iextrading.com/1.0/stock/" + symbol + "/price")
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to retrieve stock price.", http.StatusServiceUnavailable)
-		return
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Error reading body.", http.StatusInternalServerError)
-		return
-	}
-
-	// TODO: format price to two dicimal places?
-	price, err := strconv.ParseFloat(string(body), 64)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Error getting price.", http.StatusInternalServerError)
-		return
-	}
-
-	transaction := Transactions.Transaction{
-		UserID:   userID,
-		StockID:  stock.ID,
-		Date:     timeStamp,
-		Price:    price,
-		Quantity: quantity,
+	transaction := BankingTransactions.Transaction{
+		UserID: userID,
+		Date:   timeStamp,
+		Value:  value,
 	}
 
 	// store new transaction into database
