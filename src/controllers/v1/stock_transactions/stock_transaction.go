@@ -1,4 +1,4 @@
-package transactions
+package stocktransactions
 
 import (
 	"encoding/json"
@@ -12,19 +12,16 @@ import (
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
+	StockTransactions "github.com/bernardjkim/ptrade-api/pkg/types/stock_transactions"
 	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
-	Transactions "github.com/bernardjkim/ptrade-api/pkg/types/transactions"
 	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 	ORM "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
+// StockTransaction holds a transaction and stock object
 type StockTransaction struct {
-	Stock       Stocks.Stock             `xorm:"extends" json:"stock"`
-	Transaction Transactions.Transaction `xorm:"extends" json:"transaction"`
-}
-
-func (StockTransaction) TableName() string {
-	return "stocks"
+	Stock       Stocks.Stock                  `xorm:"extends" json:"stock"`
+	Transaction StockTransactions.Transaction `xorm:"extends" json:"transaction"`
 }
 
 // TransactionHandler struct needs to be initialized with a database connection.
@@ -50,9 +47,10 @@ func (t *TransactionHandler) GetTransactions(w http.ResponseWriter, r *http.Requ
 
 	var transactionList []StockTransaction
 
+	//TODO: get table names from function?
 	// get all transactions made by user join stock info
 	t.DB.Table("stocks").Alias("s").
-		Join("INNER", []string{"transactions", "t"}, "s.id = t.stock_id").
+		Join("INNER", []string{"stock_transactions", "t"}, "s.id = t.stock_id").
 		Where("t.user_id=?", userID).Find(&transactionList)
 
 	// convert packet to JSON
@@ -146,7 +144,7 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	transaction := Transactions.Transaction{
+	transaction := StockTransactions.Transaction{
 		UserID:   userID,
 		StockID:  stock.ID,
 		Date:     timeStamp,

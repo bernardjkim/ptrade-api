@@ -7,15 +7,17 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 
+	BankingTransactions "github.com/bernardjkim/ptrade-api/pkg/types/banking_transactions"
+	StockTransactions "github.com/bernardjkim/ptrade-api/pkg/types/stock_transactions"
 	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
-	Transactions "github.com/bernardjkim/ptrade-api/pkg/types/transactions"
 	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 )
 
 // Init db by creating the necessary tables
 func Init(db *xorm.Engine) (err error) {
 	db.ShowSQL()
-	return db.CreateTables(&Users.User{}, &Stocks.Stock{}, &Transactions.Transaction{})
+	return db.CreateTables(&Users.User{}, &Stocks.Stock{},
+		&StockTransactions.Transaction{}, &BankingTransactions.Transaction{})
 }
 
 // Connect will attempt to connect to the specified database.

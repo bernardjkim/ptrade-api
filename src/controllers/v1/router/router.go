@@ -10,8 +10,8 @@ import (
 
 	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stock_transactions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
-	"github.com/bernardjkim/ptrade-api/src/controllers/v1/transactions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 	"github.com/bernardjkim/ptrade-api/src/system/jwt"
 

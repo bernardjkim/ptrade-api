@@ -20,8 +20,8 @@ type StockTable struct {
 	Name   string `xorm:"VARCHAR(255) NOT NULL 'name'" json:"name" schema:"name"`
 }
 
-// TransactionTable represents a transaction made by a user
-type TransactionTable struct {
+// StockTransactionTable represents a stock transaction made by a user
+type StockTransactionTable struct {
 	ID       int64     `xorm:"SERIAL PRIMARY KEY 'id'" json:"id" schema:"id"`
 	UserID   int64     `xorm:"INTEGER NOT NULL 'user_id'" json:"user_id" schema:"user_id"`
 	StockID  int64     `xorm:"INTEGER NOT NULL 'stock_id'" json:"stock_id" schema:"stock_id"`
@@ -30,4 +30,12 @@ type TransactionTable struct {
 	Quantity int64     `xorm:"INTEGER NOT NULL 'quantity'" json:"quantity" schema:"quantity"`
 }
 
-// TODO: xorm doesn't seem to support for foriegn keys.
+// BankingTransactionTable represents a banking transaction made by a user
+type BankingTransactionTable struct {
+	ID     int64     `xorm:"SERIAL PRIMARY KEY 'id'" json:"id" schema:"id"`
+	UserID int64     `xorm:"INTEGER NOT NULL 'user_id'" json:"user_id" schema:"user_id"`
+	Date   time.Time `xorm:"DATETIME NOT NULL 'date'" json:"date" schema:"date"`
+	Value  float64   `xorm:"FLOAT NOT NULL 'value'" json:"value" schema:"value"`
+}
+
+// TODO: xorm doesn't seem to support foriegn keys.
