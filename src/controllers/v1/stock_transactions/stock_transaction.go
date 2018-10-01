@@ -2,7 +2,6 @@ package stocktransactions
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -118,7 +117,6 @@ func (t *TransactionHandler) CreateTransaction(w http.ResponseWriter, r *http.Re
 	// - clean up
 
 	timeStamp := time.Now()
-	fmt.Println("Time Stamp: ", timeStamp)
 
 	// get current price for a share
 	resp, err := http.Get("https://api.iextrading.com/1.0/stock/" + symbol + "/price")
