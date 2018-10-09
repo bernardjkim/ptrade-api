@@ -1,24 +1,18 @@
 package db
 
 import (
+	"log"
 	"net/url"
+	"time"
 
 	// import necessary to register mysql driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-
-	BankingTransactions "github.com/bernardjkim/ptrade-api/pkg/types/banking_transactions"
-	StockTransactions "github.com/bernardjkim/ptrade-api/pkg/types/stock_transactions"
-	Stocks "github.com/bernardjkim/ptrade-api/pkg/types/stocks"
-	Users "github.com/bernardjkim/ptrade-api/pkg/types/users"
 )
 
 // Init db by creating the necessary tables
-func Init(db *xorm.Engine) (err error) {
-	db.ShowSQL()
-	return db.CreateTables(&Users.User{}, &Stocks.Stock{},
-		&StockTransactions.Transaction{}, &BankingTransactions.Transaction{})
-}
+// func Init(db *xorm.Engine) {
+// }
 
 // Connect will attempt to connect to the specified database.
 // Will return an xorm Engine and any errors.
@@ -70,5 +64,17 @@ func Store(DB *xorm.Engine, model interface{}) (err error) {
 // Destroy will delete the given model from the database. Returns any errors.
 func Destroy(DB *xorm.Engine, id int64, model interface{}) (err error) {
 	_, err = DB.Id(id).Delete(model)
+	return
+}
+
+func checkError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func parseDate(s string) (date time.Time) {
+	layout := "2006-01-02 15:04:05"
+	date, _ = time.Parse(layout, s)
 	return
 }

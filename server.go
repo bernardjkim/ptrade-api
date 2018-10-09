@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/bernardjkim/ptrade-api/src/system/app"
 	"github.com/joho/godotenv"
 
+	"github.com/bernardjkim/ptrade-api/src/system/app"
 	DB "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
@@ -42,8 +42,8 @@ func main() {
 		log.Println("Unable to connect to db")
 		panic(err)
 	}
-
-	DB.Init(db)
+	// DB.Init(db)
+	db.ShowSQL()
 
 	s := app.NewServer()
 	s.Init(port, db)

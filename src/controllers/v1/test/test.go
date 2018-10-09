@@ -60,7 +60,7 @@ func InitTestDB() *xorm.Engine {
 		panic(err)
 	}
 
-	DB.Init(db)
+	// DB.Init(db)
 	testDB = db
 	return testDB
 }

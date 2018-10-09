@@ -9,9 +9,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
-	"github.com/bernardjkim/ptrade-api/src/controllers/v1/banking_transactions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
-	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stock_transactions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 	"github.com/bernardjkim/ptrade-api/src/system/jwt"
@@ -60,17 +58,13 @@ func (sr *SubRouter) AuthMiddleware(next http.Handler) http.Handler {
 // GetRoutes returns mappings from names to subroute packages.
 func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	var (
-		userHandler               users.UserHandler
-		stockHandler              stocks.StockHandler
-		stockTransactionHandler   stocktransactions.TransactionHandler
-		bankingTransactionHandler bankingtransactions.TransactionHandler
-		sessionHandler            sessions.SessionHandler
+		userHandler    users.UserHandler
+		stockHandler   stocks.StockHandler
+		sessionHandler sessions.SessionHandler
 	)
 
-	bankingTransactionHandler.Init(sr.DB)
 	sessionHandler.Init(sr.DB)
 	stockHandler.Init(sr.DB)
-	stockTransactionHandler.Init(sr.DB)
 	userHandler.Init(sr.DB)
 
 	/* ROUTES */
@@ -110,8 +104,8 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 				// TODO: currently have users GET/POST transactions directly.
 				// maybe want to have user create orders first and later
 				// execute transaction
-				routes.Route{"GetUserStockTxns", "GET", "", stockTransactionHandler.GetTransactions},
-				routes.Route{"CreateUserStockTxn", "POST", "", stockTransactionHandler.CreateTransaction},
+				// routes.Route{"GetUserStockTxns", "GET", "", stockTransactionHandler.GetTransactions},
+				// routes.Route{"CreateUserStockTxn", "POST", "", stockTransactionHandler.CreateTransaction},
 
 				routes.Route{"GetUserStockTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
 			},
@@ -120,8 +114,8 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 		"/v1/users/{ID:[0-9]+}/bankingtransactions": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"GetUserBankingTxns", "GET", "", bankingTransactionHandler.GetTransactions},
-				routes.Route{"CreateUserBankingTxn", "POST", "", bankingTransactionHandler.CreateTransaction},
+				// routes.Route{"GetUserBankingTxns", "GET", "", bankingTransactionHandler.GetTransactions},
+				// routes.Route{"CreateUserBankingTxn", "POST", "", bankingTransactionHandler.CreateTransaction},
 				routes.Route{"GetUserBankingTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
 			},
 			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
