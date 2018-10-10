@@ -137,7 +137,7 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 // GetIndex will return the index for the api
 var GetIndex = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
+	http.ServeFile(w, r, "docs/index.html")
 })
 
 // NotImplemented handler is used for API endpoints not yet implemented and will

@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/go-xorm/xorm"
 	"github.com/gorilla/mux"
 
@@ -27,6 +29,18 @@ func (r *Router) Init(db *xorm.Engine) {
 			Name(route.Name).
 			Handler(route.HandlerFunc)
 	}
+
+	// Serve stylesheets
+	r.Router.PathPrefix("/stylesheets/").Handler(http.StripPrefix("/stylesheets/",
+		http.FileServer(http.Dir("./docs/stylesheets/"))))
+
+	// Serve javascript files
+	r.Router.PathPrefix("/javascripts/").Handler(http.StripPrefix("/javascripts/",
+		http.FileServer(http.Dir("./docs/javascripts/"))))
+
+	// Serve javascript files
+	r.Router.PathPrefix("/images/").Handler(http.StripPrefix("/images/",
+		http.FileServer(http.Dir("./docs/images/"))))
 
 	var (
 		v1SubRouter V1.SubRouter
