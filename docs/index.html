@@ -1,0 +1,1117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>API Reference</title>
+    <link rel="icon" type="image/png" href="" sizes="96x96">
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #272822;
+  background-color: #f92672;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #f8f8f2;
+}
+.highlight .p, .highlight .pi {
+  color: #f8f8f2;
+}
+.highlight .gi {
+  color: #a6e22e;
+}
+.highlight .gd {
+  color: #f92672;
+}
+.highlight .gh {
+  color: #66d9ef;
+  background-color: #272822;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #ae81ff;
+}
+.highlight .kc {
+  color: #fd971f;
+}
+.highlight .kt {
+  color: #fd971f;
+}
+.highlight .kd {
+  color: #fd971f;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #a6e22e;
+}
+.highlight .sr {
+  color: #a1efe4;
+}
+.highlight .si {
+  color: #cc6633;
+}
+.highlight .se {
+  color: #cc6633;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #66d9ef;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #a6e22e;
+}
+.highlight .ss {
+  color: #a6e22e;
+}
+    </style>
+    <link href="/stylesheets/overrides.css" rel="stylesheet" media="screen" />
+    <link href="/stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="/javascripts/all_nosearch.js"></script>
+  </head>
+
+  <body class="index" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <div id="logo">
+        <a href="">
+            <img src="images/logo.png" alt="Logo" />
+        </a>
+      </div>
+
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='https://github.com/lord/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to the ptrade API! You can use our API to access ptrade API endpoints, which can be used to manage a users account, initiate trades and transfers and view portfolio data stored in the database.</p>
+
+<blockquote>
+<p>API endpoint</p>
+</blockquote>
+<pre class="highlight plaintext"><code>https://ptrade-api-staging.herokuapp.com/v1/
+
+</code></pre>
+          <h1 id="sessions">Sessions</h1>
+
+<p>A session token is required for certain API endpoints. Create a new session by signing into a user account.</p>
+
+<p>ptrade expects for the Session-Token to be included in API requests to the server in a header that looks like the following:</p>
+
+<p><code class="prettyprint">Session-Token: token123</code></p>
+
+<h2 id="create-a-new-session">Create A New Session</h2>
+
+<h3 id="request">Request</h3>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">POST https://ptrade-api-staging.herokuapp.com/v1/sessions</code></p>
+
+<!-- [![Run in Postman](https://run.pstmn.io/button.svg)]() -->
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<p><em>REQUEST PARAMETERS (FORM)</em></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">email</code> <br><span class="required">REQUIRED</span></td>
+<td>The user email.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">password</code> <br><span class="required">REQUIRED</span></td>
+<td>The user password.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains a Session-Token created for the requested user. </p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"Session-Token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9..."</span><span class="w"> 
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Session-Token</code></td>
+<td>Session-Token for user authentication.</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-session">Delete A Session</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">DELETE https://ptrade-api-staging.herokuapp.com/v1/sessions</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">Session-Token</code> <br><span class="required">REQUIRED</span></td>
+<td>The session token to be deleted.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains no content.</p>
+
+          <h1 id="users">Users</h1>
+
+<h2 id="create-a-user">Create A User</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">POST https://ptrade-api-staging.herokuapp.com/v1/users</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<p><em>REQUEST PARAMETERS (FORM)</em></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">first</code> <br><span class="required">REQUIRED</span></td>
+<td>First name of new user.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">last</code> <br><span class="required">REQUIRED</span></td>
+<td>Last name of new user.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">email</code> <br><span class="required">REQUIRED</span></td>
+<td>Email of new user.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">password</code> <br><span class="required">REQUIRED</span></td>
+<td>Password of new user.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response will return the new users data.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allen"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Iverson"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alleniverson@gmail.com"</span><span class="p">,</span><span class="w">
+</span><span class="err">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>User assigned id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">first</code></td>
+<td>User&rsquo;s first name.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">last</code></td>
+<td>User&rsquo;s last name.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">email</code></td>
+<td>User&rsquo;s email address.</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-user">Get A User</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to retrieve data for.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains user data.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allen"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Iverson"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alleniverson@gmail.com"</span><span class="p">,</span><span class="w">
+</span><span class="err">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>User assigned id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">first</code></td>
+<td>User&rsquo;s first name.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">last</code></td>
+<td>User&rsquo;s last name.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">email</code></td>
+<td>User&rsquo;s email address.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="stocks">Stocks</h1>
+
+<h2 id="get-list-of-available-stocks">Get List Of Available Stocks</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/stocks</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains a list of stock info.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Agilent Technologies Inc."</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"price_per_share"</span><span class="p">:</span><span class="w"> </span><span class="mf">69.41</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alcoa Corporation"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"price_per_share"</span><span class="p">:</span><span class="w"> </span><span class="mf">37.64</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAAU"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Perth Mint Physical Gold"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"price_per_share"</span><span class="p">:</span><span class="w"> </span><span class="mf">11.895</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>The stock id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">symbol</code></td>
+<td>The stock&rsquo;s symbol.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">name</code></td>
+<td>The stock&rsquo;s company name.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">price_per_share</code></td>
+<td>The stocks price per share in <code class="prettyprint">USD</code>.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="portfolios">Portfolios</h1>
+
+<h2 id="get-a-user-39-s-portfolio-history">Get A User&rsquo;s Portfolio History</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/charts</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to retrieve data for.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains a user&rsquo;s portfolio value history.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"portfolio_history"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-01 15:00:00"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">1000.00</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-02 15:00:00"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">1100.00</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-03 15:00:00"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">1050.00</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code></td>
+<td>User&rsquo;s id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">portfolio_history</code></td>
+<td>Array of portfolio values.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>Portfolio value id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date</code></td>
+<td>The date the value was recorded.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">value</code></td>
+<td>The portfolio value recorded in <code class="prettyprint">USD</code>.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="balances">Balances</h1>
+
+<h2 id="get-a-user-39-s-account-balance">Get A User&rsquo;s Account Balance</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/balance</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to retrieve data for.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains user data.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:13:38"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mf">1000.00</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>Balance entry id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">user_id</code></td>
+<td>The user&rsquo;s id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date</code></td>
+<td>The date when the balance was last updated.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">balance</code></td>
+<td>The current user&rsquo;s account balance in <code class="prettyprint">USD</code>.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="positions">Positions</h1>
+
+<h2 id="get-a-user-39-s-stock-positions">Get A User&rsquo;s Stock Positions</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/position</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to retrieve data for.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains user data.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"positions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-08 02:13:38"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"shares"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:13:38"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"shares"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code></td>
+<td>The user&rsquo;s id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>The stock id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date</code></td>
+<td>The date when the position was last updated.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">shares</code></td>
+<td>The current number of shares held.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="transfers">Transfers</h1>
+
+<h2 id="create-a-new-transfer-order">Create A New Transfer Order</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">POST https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/transfers</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">Session-Token</code> <br><span class="required">REQUIRED</span></td>
+<td>Token required to authenticate order.</td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to create order for.</td>
+</tr>
+</tbody></table>
+
+<p><em>REQUEST PARAMETERS (FORM)</em></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">balance</code> <br><span class="required">REQUIRED</span></td>
+<td>The balance to be transfered in <code class="prettyprint">USD</code>. Positive value for a <code class="prettyprint">deposit</code>. Negative value for a <code class="prettyprint">withdrawl</code>.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains no content.</p>
+
+<h2 id="get-all-transfer-orders">Get All Transfer Orders</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/transfers</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">Session-Token</code> <br><span class="required">REQUIRED</span></td>
+<td>Token required to authenticate data request.</td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to retrieve data for.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains a list of transfer orders made by the specefied user.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"transfers"</span><span class="p">:</span><span class="w">
+    </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:14:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:15:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FULFILLED"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mf">100.00</span><span class="p">,</span><span class="w">
+        </span><span class="err">}</span><span class="p">,</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:14:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:15:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CANCELED"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"balance"</span><span class="p">:</span><span class="w"> </span><span class="mf">1000.00</span><span class="p">,</span><span class="w">
+        </span><span class="err">}</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code></td>
+<td>The user&rsquo;s id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">transfers</code></td>
+<td>Array of transfer orders.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>The order id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date_start</code></td>
+<td>The date the order was create.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date_end</code></td>
+<td>The date the order was completed.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">status</code></td>
+<td>The order&rsquo;s status <code class="prettyprint">PENDING</code>, <code class="prettyprint">CANCELED</code>, <code class="prettyprint">FULFILLED</code>.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">balance</code></td>
+<td>The balance transfered in <code class="prettyprint">USD</code>. Positive value indicates a <code class="prettyprint">deposit</code>. Negative value indicates a <code class="prettyprint">withdrawl</code>.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="trades">Trades</h1>
+
+<h2 id="create-a-new-trade-order">Create A New Trade Order</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">POST https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/trades</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">Session-Token</code> <br><span class="required">REQUIRED</span></td>
+<td>Token required to authenticate order.</td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user create order for.</td>
+</tr>
+</tbody></table>
+
+<p><em>REQUEST PARAMETERS (FORM)</em></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">symbol</code> <br><span class="required">REQUIRED</span></td>
+<td>The symbol for the stock to be traded.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">shares</code> <br><span class="required">REQUIRED</span></td>
+<td>The number of shares to be traded. Positive value indicates a <code class="prettyprint">buy</code> order. Negative value indicates a <code class="prettyprint">sell</code> order.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains no content.</p>
+
+<h2 id="get-all-trade-orders">Get All Trade Orders</h2>
+
+<p><em>API endpoint</em></p>
+
+<p><code class="prettyprint">GET https://ptrade-api-staging.herokuapp.com/v1/users/{user_id}/trades</code></p>
+
+<p><em>HEADER VALUES</em></p>
+
+<table><thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Content-Type</code> <br><span class="required">REQUIRED</span></td>
+<td><code class="prettyprint">application/x-www-form-urlencoded</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">Session-Token</code> <br><span class="required">REQUIRED</span></td>
+<td>Token required to authenticate data request.</td>
+</tr>
+</tbody></table>
+
+<p><em>REQUSET PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code> <br><span class="required">REQUIRED</span></td>
+<td>The id of user to retrieve data for.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>A successful response contains a list of trade orders made by the specefied user.</p>
+
+<blockquote>
+<p>Example JSON response  </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"trades"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:14:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:15:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FULFILLED"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"stock_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"shares"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="err">}</span><span class="p">,</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:14:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-09 02:15:47"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CANCELED"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"stock_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"shares"</span><span class="p">:</span><span class="w"> </span><span class="mi">-5</span><span class="p">,</span><span class="w">
+        </span><span class="err">}</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><em>RESPONSE PARAMETERS</em></p>
+
+<table><thead>
+<tr>
+<th>Element</th>
+<th>Detail</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">user_id</code></td>
+<td>The user&rsquo;s id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">trades</code></td>
+<td>Array of trade orders.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>The order id.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date_start</code></td>
+<td>The date the order was create.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">date_end</code></td>
+<td>The date the order was completed.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">status</code></td>
+<td>The order&rsquo;s status <code class="prettyprint">PENDING</code>, <code class="prettyprint">CANCELED</code>, <code class="prettyprint">FULFILLED</code>.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">stock_id</code></td>
+<td>The id of the stock traded.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">shares</code></td>
+<td>The number of shares traded. Positive value indicates a <code class="prettyprint">buy</code> order. Negative value indicates a <code class="prettyprint">sell</code> order.</td>
+</tr>
+</tbody></table>
+
+          <h1 id="response-codes">Response Codes</h1>
+
+<p>Our APIs use the following response codes:</p>
+
+<p><em>RESPONSE CODES</em></p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>200</td>
+<td><b>Success</b></td>
+</tr>
+<tr>
+<td>201</td>
+<td><b>Resource created</b></td>
+</tr>
+<tr>
+<td>204</td>
+<td><b>No content</b> - The server successfully processed the request and is not returning any content.</td>
+</tr>
+<tr>
+<td>400</td>
+<td><b>Bad Request</b> &ndash; Input validation failed.</td>
+</tr>
+<tr>
+<td>403</td>
+<td><b>Forbidden</b> &ndash; The Session Token is invalid, or it is not authorized to access the service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td><b>Not Found</b> &ndash; The requested resource could not be found but may be available in the future.</td>
+</tr>
+<tr>
+<td>410</td>
+<td><b>Gone</b> – The session has expired. A new session must be created.</td>
+</tr>
+<tr>
+<td>429</td>
+<td><b>Too Many Requests</b> – There have been too many requests in the last minute.</td>
+</tr>
+<tr>
+<td>500</td>
+<td><b>Server Error</b> – An internal server error has occurred which has been logged.</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+      </div>
+    </div>
+  </body>
+</html>
