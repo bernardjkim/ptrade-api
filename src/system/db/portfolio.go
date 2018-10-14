@@ -8,18 +8,22 @@ import (
 )
 
 // GetPortfolioHistory will return history of user portfolio value
-func GetPortfolioHistory(DB *xorm.Engine, id int64) (history portfolios.PortfolioHistory) {
+func GetPortfolioHistory(DB *xorm.Engine, id int64) (history portfolios.PortfolioHistory, err error) {
 
 	rows, err := DB.QueryString("CALL get_portfolio_history(?)", id)
-	checkError(err)
+	if err != nil {
+		return
+	}
+
+	history.UserID = id
 
 	for _, row := range rows {
 		pv := portfolios.PortfolioValue{}
 		pv.ID, _ = strconv.ParseInt(row["id"], 10, 64)
-		pv.UserID, _ = strconv.ParseInt(row["user_id"], 10, 64)
 		pv.Date = parseDate(string(row["date"]))
 		pv.Value, _ = strconv.ParseFloat(row["value"], 64)
-		history = append(history, pv)
+
+		history.History = append(history.History, pv)
 	}
 	return
 }
@@ -28,7 +32,9 @@ func GetPortfolioHistory(DB *xorm.Engine, id int64) (history portfolios.Portfoli
 func GetProfit(DB *xorm.Engine, id int64) (profit float64) {
 
 	rows, err := DB.QueryString("CALL get_profit(?)", id)
-	checkError(err)
+	if err != nil {
+		return
+	}
 
 	profit, _ = strconv.ParseFloat(rows[0]["profit"], 64)
 

@@ -62,6 +62,7 @@ func InitTestDB() *xorm.Engine {
 
 	// DB.Init(db)
 	testDB = db
+	testDB.ShowSQL()
 	return testDB
 }
 
@@ -74,11 +75,32 @@ func HandleRequest(req *http.Request, handlerFunc http.HandlerFunc) (rr *httptes
 	return
 }
 
-// ClearTable will delete all entries in the {tableName} table and reset the
+// ClearUserTable will delete all entries in the users table and reset the
 // auto increment to start at 1.
-func ClearTable(tableName string) {
-	testDB.Exec("DELETE FROM ?", tableName)
-	testDB.Exec("ALTER TABLE ? AUTO_INCREMENT = 1", tableName)
+func ClearUserTable() {
+	var err error
+	_, err = testDB.Exec("DELETE FROM users")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	_, err = testDB.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+}
+
+// ClearTradeTable will delete all entries in the trades table and reset the
+// auto increment to start at 1.
+func ClearTradeTable() {
+	var err error
+	_, err = testDB.Exec("DELETE FROM trade_orders")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	_, err = testDB.Exec("ALTER TABLE trade_orders AUTO_INCREMENT = 1")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 // ** USER REQUESTS **
@@ -166,8 +188,6 @@ func OK(tb testing.TB, err error) {
 // Equals fails the test if exp is not equal to act.
 func Equals(tb testing.TB, exp, act interface{}) {
 	if !reflect.DeepEqual(exp, act) {
-		fmt.Println(exp)
-		fmt.Println(act)
 		_, file, line, _ := runtime.Caller(1)
 		fmt.Printf("\033[31m%s:%d:\n\n\texp: %#v\n\n\tgot: %#v\033[39m\n\n", filepath.Base(file), line, exp, act)
 		tb.FailNow()

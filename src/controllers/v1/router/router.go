@@ -9,6 +9,9 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/bernardjkim/ptrade-api/pkg/types/routes"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/balances"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/portfolios"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/positions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
@@ -58,11 +61,17 @@ func (sr *SubRouter) AuthMiddleware(next http.Handler) http.Handler {
 // GetRoutes returns mappings from names to subroute packages.
 func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubRoutePackage) {
 	var (
-		userHandler    users.UserHandler
-		stockHandler   stocks.StockHandler
-		sessionHandler sessions.SessionHandler
+		balanceHandler   balances.BalanceHandler
+		positionHandler  positions.PositionHandler
+		portfolioHandler portfolios.PortfolioHandler
+		stockHandler     stocks.StockHandler
+		sessionHandler   sessions.SessionHandler
+		userHandler      users.UserHandler
 	)
 
+	balanceHandler.Init(sr.DB)
+	positionHandler.Init(sr.DB)
+	portfolioHandler.Init(sr.DB)
 	sessionHandler.Init(sr.DB)
 	stockHandler.Init(sr.DB)
 	userHandler.Init(sr.DB)
@@ -75,6 +84,12 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 		"/v1": routes.SubRoutePackage{
 			Routes: routes.Routes{
 				routes.Route{"GetIndex", "GET", "", GetIndex},
+			},
+			Middleware: []mux.MiddlewareFunc{},
+		},
+		"/v1/charts": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				routes.Route{"GetPortfolioHistory", "GET", "", portfolioHandler.GetPortfolioHistory},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
@@ -98,25 +113,30 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 		// NOTE: order matters, match /user/.../transactions subroute before /users
 		// was not using the assigned middleware
-		"/v1/users/{ID:[0-9]+}/stocktransactions": routes.SubRoutePackage{
+		"/v1/users/{ID:[0-9]+}/balance": routes.SubRoutePackage{
 			Routes: routes.Routes{
-
-				// TODO: currently have users GET/POST transactions directly.
-				// maybe want to have user create orders first and later
-				// execute transaction
-				// routes.Route{"GetUserStockTxns", "GET", "", stockTransactionHandler.GetTransactions},
-				// routes.Route{"CreateUserStockTxn", "POST", "", stockTransactionHandler.CreateTransaction},
-
-				routes.Route{"GetUserStockTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
+				routes.Route{"GetUserBalance", "GET", "", balanceHandler.GetBalance},
 			},
 			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
 		},
 
-		"/v1/users/{ID:[0-9]+}/bankingtransactions": routes.SubRoutePackage{
+		"/v1/users/{ID:[0-9]+}/positions": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				// routes.Route{"GetUserBankingTxns", "GET", "", bankingTransactionHandler.GetTransactions},
-				// routes.Route{"CreateUserBankingTxn", "POST", "", bankingTransactionHandler.CreateTransaction},
-				routes.Route{"GetUserBankingTxn", "GET", "/{txnID:[0-9]+}", NotImplemented},
+				routes.Route{"GetUserPositions", "GET", "", positionHandler.GetPositions},
+			},
+			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
+		},
+
+		"/v1/users/{ID:[0-9]+}/trades": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				// routes.Route{"GetUserPositions", "GET", "", positionHandler.GetPositions},
+			},
+			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
+		},
+
+		"/v1/users/{ID:[0-9]+}/transfers": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				// routes.Route{"GetUserPositions", "GET", "", positionHandler.GetPositions},
 			},
 			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
 		},

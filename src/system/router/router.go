@@ -38,7 +38,7 @@ func (r *Router) Init(db *xorm.Engine) {
 	r.Router.PathPrefix("/javascripts/").Handler(http.StripPrefix("/javascripts/",
 		http.FileServer(http.Dir("./docs/javascripts/"))))
 
-	// Serve javascript files
+	// Serve image files
 	r.Router.PathPrefix("/images/").Handler(http.StripPrefix("/images/",
 		http.FileServer(http.Dir("./docs/images/"))))
 

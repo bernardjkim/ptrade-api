@@ -45,7 +45,7 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	// find all transactions with given user id
 	if err := ORM.FindBy(h.DB, &user); err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to get transactions from database", http.StatusInternalServerError)
+		http.Error(w, "Unable to get user from database", http.StatusInternalServerError)
 		return
 	}
 
@@ -86,7 +86,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	user := Users.User{Email: email}
 	if err := ORM.FindBy(h.DB, &user); err != nil {
 		log.Println(err)
-		http.Error(w, "Unable to find user in database", http.StatusInternalServerError)
+		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 

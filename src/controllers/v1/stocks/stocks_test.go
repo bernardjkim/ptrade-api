@@ -29,7 +29,4 @@ func TestGetStocks(t *testing.T) {
 	Test.Equals(t, http.StatusOK, rr.Code)
 
 	// TODO: is it necessary to test response body?
-	// for now just testing the body length
-	// Test.Equals(t, 617539, rr.Body.Len())
-
 }

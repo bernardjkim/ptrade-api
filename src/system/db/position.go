@@ -8,29 +8,32 @@ import (
 )
 
 // GetPositions will return the users current position for each stock
-func GetPositions(DB *xorm.Engine, id int64) (positionsList positions.Positions) {
+func GetPositions(DB *xorm.Engine, id int64) (positionsList positions.Positions, err error) {
 
 	rows, err := DB.QueryString("CALL get_positions(?)", id)
-	checkError(err)
+	if err != nil {
+		return
+	}
+
+	positionsList = positions.Positions{UserID: id}
 
 	for _, row := range rows {
 		p := positions.Position{}
-		p.ID, _ = strconv.ParseInt(row["id"], 10, 64)
-		p.UserID, _ = strconv.ParseInt(row["user_id"], 10, 64)
-		p.DateStart = parseDate(string(row["date_start"]))
-		p.DateStart = parseDate(string(row["date_end"]))
 		p.StockID, _ = strconv.ParseInt(row["stock_id"], 10, 64)
+		p.Date = parseDate(string(row["date"]))
 		p.Shares, _ = strconv.ParseInt(row["shares"], 10, 64)
-		positionsList = append(positionsList, p)
+		positionsList.Positions = append(positionsList.Positions, p)
 	}
 	return
 }
 
 // GetShares will return the users current position for a specifed stock
-func GetShares(DB *xorm.Engine, id, stockID int64) (shares int64) {
+func GetShares(DB *xorm.Engine, id, stockID int64) (shares int64, err error) {
 
 	rows, err := DB.Limit(1).QueryString("CALL get_shares(?, ?)", id, stockID)
-	checkError(err)
+	if err != nil {
+		return
+	}
 
 	shares, _ = strconv.ParseInt(rows[0]["shares"], 10, 64)
 

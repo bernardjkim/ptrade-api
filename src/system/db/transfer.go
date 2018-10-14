@@ -8,19 +8,23 @@ import (
 )
 
 // GetTransfers will return all transfer orders made by the given user id
-func GetTransfers(DB *xorm.Engine, id int64) (orders []transfers.TransferOrder) {
+func GetTransfers(DB *xorm.Engine, id int64) (orders transfers.TransferOrders, err error) {
 
 	rows, err := DB.QueryString("CALL get_transfer_orders(?)", id)
-	checkError(err)
+	if err != nil {
+		return
+	}
+
+	orders = transfers.TransferOrders{UserID: id}
 
 	for _, row := range rows {
 		t := transfers.TransferOrder{}
-		t.ID, _ = strconv.ParseInt(row["id"], 10, 64)
-		t.UserID, _ = strconv.ParseInt(row["user_id"], 10, 64)
+		t.OrderID, _ = strconv.ParseInt(row["id"], 10, 64)
 		t.DateStart = parseDate(string(row["date_start"]))
 		t.DateEnd = parseDate(string(row["date_end"]))
 		t.Balance, _ = strconv.ParseFloat(row["balance"], 64)
-		orders = append(orders, t)
+		t.Status, _ = row["status"]
+		orders.Transfers = append(orders.Transfers, t)
 	}
 	return
 }

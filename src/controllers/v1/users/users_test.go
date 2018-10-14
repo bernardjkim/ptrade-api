@@ -25,7 +25,7 @@ func init() {
 
 // testSetup will run initial setup for each test case
 func testSetup() {
-	Test.ClearTable("users")
+	Test.ClearUserTable()
 }
 
 // TestEmptyTableGetUser will test the GetUser handler for an empty table.

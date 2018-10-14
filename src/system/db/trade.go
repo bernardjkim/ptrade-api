@@ -8,28 +8,31 @@ import (
 )
 
 // GetTrades will return all transfer orders made by the given user id
-func GetTrades(DB *xorm.Engine, id int64) (orders []trades.TradeOrder) {
+func GetTrades(DB *xorm.Engine, id int64) (orders trades.TradeOrders, err error) {
 
 	rows, err := DB.QueryString("CALL get_trade_orders(?)", id)
-	checkError(err)
+	if err != nil {
+		return
+	}
+
+	orders = trades.TradeOrders{UserID: id}
 
 	for _, row := range rows {
 		t := trades.TradeOrder{}
-		t.ID, _ = strconv.ParseInt(row["id"], 10, 64)
-		t.UserID, _ = strconv.ParseInt(row["user_id"], 10, 64)
+		t.OrderID, _ = strconv.ParseInt(row["id"], 10, 64)
 		t.DateStart = parseDate(string(row["date_start"]))
 		t.DateEnd = parseDate(string(row["date_end"]))
 		t.StockID, _ = strconv.ParseInt(row["stock_id"], 10, 64)
 		t.Shares, _ = strconv.ParseInt(row["shares"], 10, 64)
 		t.PricePerShare, _ = strconv.ParseFloat(row["price_per_share"], 64)
-		orders = append(orders, t)
+		t.Status, _ = row["status"]
+		orders.Trades = append(orders.Trades, t)
 	}
 	return
 }
 
 // NewTrade will create a new trade order for the specified user id
-func NewTrade(DB *xorm.Engine, id int64, shares int64, pps float64) {
-	_, err := DB.Exec("CALL new_trade_order(?, ?, ?)", id, shares, pps)
-	checkError(err)
+func NewTrade(DB *xorm.Engine, userID int64, stockID int64, shares int64) (err error) {
+	_, err = DB.Exec("CALL new_trade_order(?, ?, ?)", userID, stockID, shares)
 	return
 }
