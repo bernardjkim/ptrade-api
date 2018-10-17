@@ -1,17 +1,14 @@
 package sessions_test
 
 import (
+	"log"
 	"net/http"
-	"strings"
 	"testing"
 
 	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
 	Test "github.com/bernardjkim/ptrade-api/src/controllers/v1/test"
 	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 )
-
-// NOTE: trimming reponse body of \n because http.Error calls Fprintln which
-// adds a new line to the end of the error msg.
 
 var (
 	userHandler    UserHandler
@@ -30,7 +27,15 @@ func init() {
 
 // testSetup will clear user table and create a user to test with.
 func testSetup() {
-	Test.ClearTable("users")
+	var err error
+	_, err = userHandler.DB.Exec("DELETE FROM users")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	_, err = userHandler.DB.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	createTestUser()
 
 }
@@ -67,7 +72,7 @@ func TestInvalidEmailCreateSession(t *testing.T) {
 	Test.Equals(t, http.StatusNotFound, rr.Code)
 
 	exp := "No user with provided email exists."
-	act := strings.TrimSuffix(rr.Body.String(), "\n")
+	act := Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 }
 
@@ -80,7 +85,7 @@ func TestInvalidPassCreateSession(t *testing.T) {
 	Test.Equals(t, http.StatusUnauthorized, rr.Code)
 
 	exp := "Credentials do not match."
-	act := strings.TrimSuffix(rr.Body.String(), "\n")
+	act := Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 }
 
@@ -93,7 +98,7 @@ func TestMissingFieldsCreateSession(t *testing.T) {
 	Test.Equals(t, http.StatusBadRequest, rr.Code)
 
 	exp := "Email and password are required."
-	act := strings.TrimSuffix(rr.Body.String(), "\n")
+	act := Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 
 	missingPass := Test.CreateLoginReq("johndoe@email.com", "")
@@ -102,6 +107,6 @@ func TestMissingFieldsCreateSession(t *testing.T) {
 	Test.Equals(t, http.StatusBadRequest, rr.Code)
 
 	exp = "Email and password are required."
-	act = strings.TrimSuffix(rr.Body.String(), "\n")
+	act = Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 }

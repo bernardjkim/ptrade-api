@@ -30,9 +30,8 @@ func GetTransfers(DB *xorm.Engine, id int64) (orders transfers.TransferOrders, e
 }
 
 // NewTransfer will create a new transfer order for the specified user id
-func NewTransfer(DB *xorm.Engine, id int64, balance float64) {
-	_, err := DB.Exec("CALL new_transfer_order(?, ?)", id, balance)
-	checkError(err)
+func NewTransfer(DB *xorm.Engine, id int64, balance float64) (err error) {
+	_, err = DB.Exec("CALL new_transfer_order(?, ?)", id, balance)
 	return
 }
 

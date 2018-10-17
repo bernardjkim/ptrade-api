@@ -2,16 +2,13 @@ package users_test
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
-	"strings"
 	"testing"
 
 	Test "github.com/bernardjkim/ptrade-api/src/controllers/v1/test"
 	. "github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 )
-
-// NOTE: trimming reponse body of \n because http.Error calls Fprintln which
-// adds a new line to the end of the error msg.
 
 var (
 	userHandler UserHandler
@@ -25,7 +22,15 @@ func init() {
 
 // testSetup will run initial setup for each test case
 func testSetup() {
-	Test.ClearUserTable()
+	var err error
+	_, err = userHandler.DB.Exec("DELETE FROM users")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	_, err = userHandler.DB.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 // TestEmptyTableGetUser will test the GetUser handler for an empty table.
@@ -76,7 +81,7 @@ func TestCreateRepeatedUser(t *testing.T) {
 	Test.Equals(t, http.StatusBadRequest, rr.Code)
 
 	exp := "Email is already in use"
-	act := strings.TrimSuffix(rr.Body.String(), "\n")
+	act := Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 }
 
@@ -94,7 +99,7 @@ func TestMissingFieldsCreateUser(t *testing.T) {
 	Test.Equals(t, http.StatusBadRequest, rr.Code)
 
 	exp := "Email and password are required."
-	act := strings.TrimSuffix(rr.Body.String(), "\n")
+	act := Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 
 	// **Test missing password**
@@ -106,6 +111,6 @@ func TestMissingFieldsCreateUser(t *testing.T) {
 	Test.Equals(t, http.StatusBadRequest, rr.Code)
 
 	exp = "Email and password are required."
-	act = strings.TrimSuffix(rr.Body.String(), "\n")
+	act = Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 }

@@ -2,7 +2,6 @@ package trades
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -47,8 +46,6 @@ func (h *TradeHandler) CreateTrade(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Println(stock)
 
 	if stock.ID < 1 {
 		log.Println("Provided symbol id does not exist in database")

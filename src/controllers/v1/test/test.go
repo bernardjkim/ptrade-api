@@ -1,6 +1,7 @@
 package test
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"reflect"
 	"runtime"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -66,6 +68,12 @@ func InitTestDB() *xorm.Engine {
 	return testDB
 }
 
+// ParseBody will trim response body becuase Fprintln adds a new line to err msg.
+func ParseBody(body *bytes.Buffer) (s string) {
+	s = strings.TrimSuffix(body.String(), "\n")
+	return
+}
+
 // HandleRequest will handle the given request with the given handlerFunc and
 // return a *httptest.ResponseRecorder.
 func HandleRequest(req *http.Request, handlerFunc http.HandlerFunc) (rr *httptest.ResponseRecorder) {
@@ -75,32 +83,14 @@ func HandleRequest(req *http.Request, handlerFunc http.HandlerFunc) (rr *httptes
 	return
 }
 
-// ClearUserTable will delete all entries in the users table and reset the
-// auto increment to start at 1.
-func ClearUserTable() {
-	var err error
-	_, err = testDB.Exec("DELETE FROM users")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	_, err = testDB.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+// NewUser will insert a new user into the database with the given fields
+func NewUser(first, last, email, pass string) {
+	testDB.Exec("INSERT INTO users (first, last, email, password) VALUES (?,?,?,?)", first, last, email, pass)
 }
 
-// ClearTradeTable will delete all entries in the trades table and reset the
-// auto increment to start at 1.
-func ClearTradeTable() {
-	var err error
-	_, err = testDB.Exec("DELETE FROM trade_orders")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	_, err = testDB.Exec("ALTER TABLE trade_orders AUTO_INCREMENT = 1")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+// NewStock will insert a new stock into the database with the given fields
+func NewStock(symbol, name string, value int64) {
+	testDB.Exec("INSERT INTO stocks (symbol, name, price_per_share) VALUES (?,?,?)", symbol, name, value)
 }
 
 // ** USER REQUESTS **

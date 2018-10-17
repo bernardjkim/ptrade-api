@@ -14,6 +14,8 @@ import (
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/positions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/sessions"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/stocks"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/trades"
+	"github.com/bernardjkim/ptrade-api/src/controllers/v1/transfers"
 	"github.com/bernardjkim/ptrade-api/src/controllers/v1/users"
 	"github.com/bernardjkim/ptrade-api/src/system/jwt"
 
@@ -66,6 +68,8 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 		portfolioHandler portfolios.PortfolioHandler
 		stockHandler     stocks.StockHandler
 		sessionHandler   sessions.SessionHandler
+		tradeHandler     trades.TradeHandler
+		transferHandler  transfers.TransferHandler
 		userHandler      users.UserHandler
 	)
 
@@ -74,6 +78,8 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 	portfolioHandler.Init(sr.DB)
 	sessionHandler.Init(sr.DB)
 	stockHandler.Init(sr.DB)
+	tradeHandler.Init(sr.DB)
+	transferHandler.Init(sr.DB)
 	userHandler.Init(sr.DB)
 
 	/* ROUTES */
@@ -129,14 +135,16 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 		"/v1/users/{ID:[0-9]+}/trades": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				// routes.Route{"GetUserPositions", "GET", "", positionHandler.GetPositions},
+				routes.Route{"GetTrades", "GET", "", tradeHandler.GetTrades},
+				routes.Route{"CreateTrade", "POST", "", tradeHandler.CreateTrade},
 			},
 			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
 		},
 
 		"/v1/users/{ID:[0-9]+}/transfers": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				// routes.Route{"GetUserPositions", "GET", "", positionHandler.GetPositions},
+				routes.Route{"GetTransfers", "GET", "", transferHandler.GetTransfers},
+				routes.Route{"CreateTransfer", "POST", "", transferHandler.CreateTransfer},
 			},
 			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
 		},

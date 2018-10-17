@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"time"
 
@@ -14,9 +13,6 @@ import (
 	Test "github.com/bernardjkim/ptrade-api/src/controllers/v1/test"
 	"github.com/gorilla/mux"
 )
-
-// NOTE: trimming reponse body of \n because http.Error calls Fprintln which
-// adds a new line to the end of the error msg.
 
 var (
 	positionHandler PositionHandler
@@ -62,16 +58,15 @@ func TestGetHistoryEmptyTable(t *testing.T) {
 	Test.Equals(t, http.StatusBadRequest, rr.Code)
 
 	exp := "Provided user id does not exist in databse"
-	act := strings.TrimSuffix(rr.Body.String(), "\n")
+	act := Test.ParseBody(rr.Body)
 	Test.Equals(t, exp, act)
 }
 
 // TestGetPositions
 func TestGetPositions(t *testing.T) {
 	testSetup()
-
-	// Test positions initialization
-	positionHandler.DB.Exec("INSERT INTO users (first, last, email, password) VALUES ('test1','test1','test1','test1')")
+	Test.NewUser("test1", "test1", "test1", "test1")
+	Test.NewStock("AAPL", "APPLE", 200)
 	positionHandler.DB.Exec("INSERT INTO positions (user_id, stock_id, shares) VALUES (1, 1, 5)")
 
 	req := httptest.NewRequest("GET", "/v1/users/{ID:[0-9]+}/positions", nil)

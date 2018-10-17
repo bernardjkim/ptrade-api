@@ -9,9 +9,6 @@ import (
 	Test "github.com/bernardjkim/ptrade-api/src/controllers/v1/test"
 )
 
-// NOTE: trimming reponse body of \n because http.Error calls Fprintln which
-// adds a new line to the end of the error msg.
-
 var (
 	stockHandler StockHandler
 )
