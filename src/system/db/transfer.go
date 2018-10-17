@@ -16,6 +16,7 @@ func GetTransfers(DB *xorm.Engine, id int64) (orders transfers.TransferOrders, e
 	}
 
 	orders = transfers.TransferOrders{UserID: id}
+	orders.Transfers = []transfers.TransferOrder{}
 
 	for _, row := range rows {
 		t := transfers.TransferOrder{}

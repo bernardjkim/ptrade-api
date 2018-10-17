@@ -6,15 +6,15 @@ import (
 
 // Positions is a list of Position objects
 type Positions struct {
-	UserID    int64
-	Positions []Position
+	UserID    int64      `json:"user_id"`
+	Positions []Position `json:"positions"`
 }
 
 // Position represents a users position for a specific stock
 type Position struct {
-	StockID int64
-	Date    time.Time
-	Shares  int64
+	StockID int64     `json:"stock_id"`
+	Date    time.Time `json:"date"`
+	Shares  int64     `json:"shares"`
 }
 
 // TableName simply returns the table name

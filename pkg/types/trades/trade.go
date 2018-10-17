@@ -14,8 +14,8 @@ type Trade db.TradeOrderTable
 
 // TradeOrders represent a list of transfer order made by a user
 type TradeOrders struct {
-	UserID int64
-	Trades []TradeOrder
+	UserID int64        `json:"user_id"`
+	Trades []TradeOrder `json:"trades"`
 }
 
 // TradeOrder represents a transfer joined with order made by a user

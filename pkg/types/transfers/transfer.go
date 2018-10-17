@@ -14,8 +14,8 @@ type Transfer db.TransferOrderTable
 
 // TransferOrders represent a list of transfer order made by a user
 type TransferOrders struct {
-	UserID    int64
-	Transfers []TransferOrder
+	UserID    int64           `json:"user_id"`
+	Transfers []TransferOrder `json:"transfers"`
 }
 
 // TransferOrder represents a transfer joined with order made by a user

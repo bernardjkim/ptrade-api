@@ -93,12 +93,6 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},
-		"/v1/charts": routes.SubRoutePackage{
-			Routes: routes.Routes{
-				routes.Route{"GetPortfolioHistory", "GET", "", portfolioHandler.GetPortfolioHistory},
-			},
-			Middleware: []mux.MiddlewareFunc{},
-		},
 
 		"/v1/sessions": routes.SubRoutePackage{
 			Routes: routes.Routes{
@@ -124,6 +118,13 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 				routes.Route{"GetUserBalance", "GET", "", balanceHandler.GetBalance},
 			},
 			Middleware: []mux.MiddlewareFunc{sr.AuthMiddleware},
+		},
+
+		"/v1/users/{ID:[0-9]+}/charts": routes.SubRoutePackage{
+			Routes: routes.Routes{
+				routes.Route{"GetPortfolioHistory", "GET", "", portfolioHandler.GetPortfolioHistory},
+			},
+			Middleware: []mux.MiddlewareFunc{},
 		},
 
 		"/v1/users/{ID:[0-9]+}/positions": routes.SubRoutePackage{

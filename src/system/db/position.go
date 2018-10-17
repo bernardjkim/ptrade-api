@@ -16,6 +16,7 @@ func GetPositions(DB *xorm.Engine, id int64) (positionsList positions.Positions,
 	}
 
 	positionsList = positions.Positions{UserID: id}
+	positionsList.Positions = []positions.Position{}
 
 	for _, row := range rows {
 		p := positions.Position{}

@@ -16,6 +16,7 @@ func GetPortfolioHistory(DB *xorm.Engine, id int64) (history portfolios.Portfoli
 	}
 
 	history.UserID = id
+	history.History = []portfolios.PortfolioValue{}
 
 	for _, row := range rows {
 		pv := portfolios.PortfolioValue{}

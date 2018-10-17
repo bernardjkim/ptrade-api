@@ -16,9 +16,9 @@ type UserTable struct {
 // PortfolioHistoryTable reprents a snapshot of a users portfolio value at a given date
 type PortfolioHistoryTable struct {
 	ID     int64     `xorm:"SERIAL PRIMARY KEY 'id'" json:"id" schema:"id"`
-	UserID int64     `xorm:"user_id" json:"user_id" schema:"user_id"`
+	UserID int64     `xorm:"INTEGER 'user_id'" json:"user_id" schema:"user_id"`
 	Date   time.Time `xorm:"DATETIME NOT NULL 'date'" json:"date" schema:"date"`
-	Value  float64   `xorm:"value" json:"value" schema:"value"`
+	Value  float64   `xorm:"FLOAT 'value'" json:"value" schema:"value"`
 }
 
 // StockTable represents a stock that is available in the database

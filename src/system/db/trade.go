@@ -16,6 +16,7 @@ func GetTrades(DB *xorm.Engine, id int64) (orders trades.TradeOrders, err error)
 	}
 
 	orders = trades.TradeOrders{UserID: id}
+	orders.Trades = []trades.TradeOrder{}
 
 	for _, row := range rows {
 		t := trades.TradeOrder{}

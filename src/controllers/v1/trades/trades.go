@@ -63,7 +63,7 @@ func (h *TradeHandler) CreateTrade(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get id of authenticated user
-	curUserID := int64(r.Context().Value(Users.UserIDKey).(int))
+	curUserID := r.Context().Value(Users.UserIDKey)
 	if curUserID != userID {
 		log.Printf("Attempted to create order for user: %d, authenticated as user: %d\n", userID, curUserID)
 		http.Error(w, "Unauthorized to make this request.", http.StatusUnauthorized)
