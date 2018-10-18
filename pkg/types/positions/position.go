@@ -12,9 +12,11 @@ type Positions struct {
 
 // Position represents a users position for a specific stock
 type Position struct {
-	StockID int64     `json:"stock_id"`
-	Date    time.Time `json:"date"`
-	Shares  int64     `json:"shares"`
+	StockID       int64     `json:"stock_id"`
+	Date          time.Time `json:"date"`
+	Symbol        string    `json:"symbol"`
+	PricePerShare float64   `json:"price_per_share"`
+	Shares        int64     `json:"shares"`
 }
 
 // TableName simply returns the table name

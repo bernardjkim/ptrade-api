@@ -21,7 +21,9 @@ func GetPositions(DB *xorm.Engine, id int64) (positionsList positions.Positions,
 	for _, row := range rows {
 		p := positions.Position{}
 		p.StockID, _ = strconv.ParseInt(row["stock_id"], 10, 64)
-		p.Date = parseDate(string(row["date"]))
+		p.Date = parseDate(string(row["date_start"]))
+		p.Symbol = row["symbol"]
+		p.PricePerShare, _ = strconv.ParseFloat(row["price_per_share"], 64)
 		p.Shares, _ = strconv.ParseInt(row["shares"], 10, 64)
 		positionsList.Positions = append(positionsList.Positions, p)
 	}
