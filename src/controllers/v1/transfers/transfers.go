@@ -74,24 +74,24 @@ func (h *TransferHandler) CreateTransfer(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	transfers, err := ORM.GetTransfers(h.DB, userID)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to get transfers", http.StatusInternalServerError)
-		return
-	}
+	// transfers, err := ORM.GetTransfers(h.DB, userID)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	http.Error(w, "Unable to get transfers", http.StatusInternalServerError)
+	// 	return
+	// }
 
-	// convert packet to JSON
-	packet, err := json.Marshal(transfers)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
-		return
-	}
+	// // convert packet to JSON
+	// packet, err := json.Marshal(transfers)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
+	// 	return
+	// }
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(packet)
+	// w.Write(packet)
 }
 
 // GetTransfers returns a list of the user's transfer orders

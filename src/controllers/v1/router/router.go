@@ -122,7 +122,9 @@ func (sr *SubRouter) GetRoutes(DB *xorm.Engine) (SubRoute map[string]routes.SubR
 
 		"/v1/users/{ID:[0-9]+}/charts": routes.SubRoutePackage{
 			Routes: routes.Routes{
-				routes.Route{"GetPortfolioHistory", "GET", "", portfolioHandler.GetPortfolioHistory},
+				// TODO: How to distinguish path between complete history vs day history?
+				routes.Route{"GetPortfolioHistory", "GET", "", portfolioHandler.GetDayHistory},
+				// routes.Route{"GetPortfolioHistory", "GET", "", portfolioHandler.GetPortfolioHistory},
 			},
 			Middleware: []mux.MiddlewareFunc{},
 		},

@@ -98,24 +98,24 @@ func (h *TradeHandler) CreateTrade(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	trades, err := ORM.GetTrades(h.DB, userID)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to get trades", http.StatusInternalServerError)
-		return
-	}
+	// trades, err := ORM.GetTrades(h.DB, userID)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	http.Error(w, "Unable to get trades", http.StatusInternalServerError)
+	// 	return
+	// }
 
-	// convert packet to JSON
-	packet, err := json.Marshal(trades)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
-		return
-	}
+	// // convert packet to JSON
+	// packet, err := json.Marshal(trades)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	http.Error(w, "Unable to marshal json.", http.StatusInternalServerError)
+	// 	return
+	// }
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(packet)
+	// w.Write(packet)
 }
 
 // GetTrades returns the current user's postions
