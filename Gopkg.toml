@@ -59,3 +59,4 @@
 
 [metadata.heroku]
   root-package = "github.com/bernardjkim/ptrade-api"
+  install = "./cmd/..."
