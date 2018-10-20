@@ -7,8 +7,8 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/bernardjkim/ptrade-api/cmd/server/src/system/app"
-	DB "github.com/bernardjkim/ptrade-api/cmd/server/src/system/db"
+	"github.com/bernardjkim/ptrade-api/src/system/app"
+	DB "github.com/bernardjkim/ptrade-api/src/system/db"
 )
 
 var (
