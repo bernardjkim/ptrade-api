@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-xorm/xorm"
 	"github.com/joho/godotenv"
@@ -32,6 +33,18 @@ func init() {
 }
 
 func main() {
+	currentTime := getEST(time.Now())
+
+	// stock market closed on weekends
+	if currentTime.Weekday().String() == "Saturday" ||
+		currentTime.Weekday().String() == "Sunday" {
+		return
+	}
+
+	// stock market hours from 6:00am - 3:00 pm ??
+	if currentTime.Hour() < 6 || currentTime.Hour() >= 15 {
+		return
+	}
 
 	db, err := DB.ConnectURL(dbURL, dboptions)
 	if err != nil {
@@ -48,6 +61,15 @@ func main() {
 
 	getPrices(db, symbols)
 
+}
+
+// getEST converts t to EST
+func getEST(t time.Time) time.Time {
+	location, err := time.LoadLocation("EST")
+	if err != nil {
+		log.Println(err)
+	}
+	return t.In(location)
 }
 
 func getSymbols(DB *xorm.Engine) (symbols []string, err error) {
@@ -71,6 +93,7 @@ func getSymbols(DB *xorm.Engine) (symbols []string, err error) {
 
 func getPrices(DB *xorm.Engine, symbols []string) (err error) {
 	// TODO: Is there a max batch size?? Should we batch requests in smaller portions?
+	// Might want to consider using a stringbuilder for efficiency
 	batchSymbols := ""
 	for _, s := range symbols {
 		batchSymbols += s + ","
