@@ -55,7 +55,7 @@ func main() {
 
 	symbols, err := getSymbols(db)
 	if err != nil {
-		log.Println("Unalge to get symbols")
+		log.Println("Unable to get symbols")
 		panic(err)
 	}
 
