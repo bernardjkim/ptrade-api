@@ -32,7 +32,7 @@ func GetPortfolioHistory(DB *xorm.Engine, id int64) (history portfolios.Portfoli
 // GetDayHistory will return today's history
 func GetDayHistory(DB *xorm.Engine, id int64) (history portfolios.PortfolioHistory, err error) {
 
-	rows, err := DB.QueryString("CALL day_history(?)", id)
+	rows, err := DB.QueryString("CALL get_day_history(?)", id)
 	if err != nil {
 		return
 	}
